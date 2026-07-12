@@ -35,8 +35,10 @@
     /* Clean UK 11+ display refinements */
     .diagram{max-width:min(100%,660px);max-height:360px;border-radius:4px;border:1px solid #cfd6df;background:#fff}
     .diagram-wrap{margin:4px 0 8px;gap:0;padding:0}
-    .math-frac{font-size:1.05em;vertical-align:-0.35em;margin:0 .08em}
-    .choice .label math,.question-text math,.review-feedback math,.mini-table math{font-size:1.08em;vertical-align:-0.35em}
+    .math-frac,.math-mixed,.math-num,.math-money,.math-percent,.math-coord{font-size:1.05em;vertical-align:-0.35em;margin:0 .08em}
+    .math-num,.math-money,.math-percent,.math-coord{vertical-align:baseline}
+    .choice .label math,.question-text math,.review-feedback math,.mini-table math,.table-card math{font-size:1.08em}
+    .question-text .math-mixed,.review-feedback .math-mixed,.choice .label .math-mixed{white-space:nowrap}
     .answer-row{display:block;margin-top:12px}
     .standard-answer-group{display:grid;gap:8px}
     .fraction-answer-group{display:grid;gap:8px;align-items:start;justify-items:start}
@@ -311,6 +313,23 @@
       if (den < 0) { den *= -1; num *= -1; }
       return { num, den };
     }
+    function coprimeNumerator(den) {
+      const options = [];
+      for (let n = 1; n < den; n++) if (gcd(n, den) === 1) options.push(n);
+      return pick(options.length ? options : [1]);
+    }
+    function properFractionFrom(choices = [2,3,4,5,8,10]) {
+      const den = pick(choices);
+      return { num: coprimeNumerator(den), den };
+    }
+    function easyDenPair(choices = [2,3,4,5,8,10]) {
+      const pairs = [];
+      choices.forEach(a => choices.forEach(b => {
+        const lcm = a * b / gcd(a, b);
+        if (lcm <= 20) pairs.push([a,b]);
+      }));
+      return pick(pairs.length ? pairs : [[2,4]]);
+    }
     function isPrime(n) {
       n = Number(n);
       if (!Number.isInteger(n) || n < 2) return false;
@@ -354,17 +373,75 @@
     function fracText(fr) {
       const s = simplify(fr.num, fr.den);
       if (s.den === 1) return String(s.num);
-      return s.num + "/" + s.den;
+      const sign = s.num < 0 ? "-" : "";
+      const absNum = Math.abs(s.num);
+      if (absNum > s.den) {
+        const whole = Math.floor(absNum / s.den);
+        const rem = absNum % s.den;
+        if (rem === 0) return sign + String(whole);
+        return `${sign}${whole} ${rem}/${s.den}`;
+      }
+      return `${s.num}/${s.den}`;
     }
 
+    function mathNumberHtml(n) {
+      return `<math class="math-num" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(n)}"><mn>${escapeHtml(n)}</mn></math>`;
+    }
     function mathFracHtml(num, den) {
       return `<math class="math-frac" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(num)} over ${escapeHtml(den)}"><mfrac><mn>${escapeHtml(num)}</mn><mn>${escapeHtml(den)}</mn></mfrac></math>`;
     }
+    function mathMixedHtml(whole, num, den) {
+      return `<math class="math-mixed" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(whole)} and ${escapeHtml(num)} over ${escapeHtml(den)}"><mn>${escapeHtml(whole)}</mn><mfrac><mn>${escapeHtml(num)}</mn><mn>${escapeHtml(den)}</mn></mfrac></math>`;
+    }
+    function mathFractionObjectHtml(fr) {
+      const s = simplify(fr.num, fr.den);
+      if (s.den === 1) return mathNumberHtml(s.num);
+      const sign = s.num < 0 ? "-" : "";
+      const absNum = Math.abs(s.num);
+      if (absNum > s.den) {
+        const whole = Math.floor(absNum / s.den);
+        const rem = absNum % s.den;
+        if (rem === 0) return mathNumberHtml(sign + whole);
+        return mathMixedHtml(sign + whole, rem, s.den);
+      }
+      return mathFracHtml(s.num, s.den);
+    }
+    function mathFractionChoiceHtml(fr) {
+      const num = Number(fr.num), den = Number(fr.den);
+      if (!den || den === 1) return mathNumberHtml(num);
+      return mathFracHtml(num, den);
+    }
+    function mathMoneyHtml(symbol, amount) {
+      return `<math class="math-money" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(symbol)}${escapeHtml(amount)}"><mo>${escapeHtml(symbol)}</mo><mn>${escapeHtml(amount)}</mn></math>`;
+    }
+    function mathPercentHtml(amount) {
+      return `<math class="math-percent" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(amount)} percent"><mn>${escapeHtml(amount)}</mn><mo>%</mo></math>`;
+    }
+    function mathCoordHtml(x, y) {
+      return `<math class="math-coord" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="coordinate ${escapeHtml(x)}, ${escapeHtml(y)}"><mo>(</mo><mn>${escapeHtml(x)}</mn><mo>,</mo><mn>${escapeHtml(y)}</mn><mo>)</mo></math>`;
+    }
+    function placeholderKey(n) {
+      let s = ""; n += 1;
+      while (n > 0) { n -= 1; s = String.fromCharCode(65 + (n % 26)) + s; n = Math.floor(n / 26); }
+      return `@@MATH${s}@@`;
+    }
+    function placeholderIndex(key) {
+      let n = 0;
+      for (const ch of key) n = n * 26 + (ch.charCodeAt(0) - 64);
+      return n - 1;
+    }
     function mathifyText(value) {
       let safe = escapeHtml(String(value ?? ""));
-      safe = safe.replace(/\b(\d+)\s+(\d+)\/(\d+)\b/g, (_, whole, num, den) => `${whole}${mathFracHtml(num, den)}`);
-      safe = safe.replace(/\b(\d+)\/(\d+)\b/g, (_, num, den) => mathFracHtml(num, den));
-      return safe;
+      const snippets = [];
+      const stash = html => { const key = placeholderKey(snippets.length); snippets.push(html); return key; };
+      safe = safe.replace(/\b\d{1,2}:\d{2}\b/g, m => stash(m));
+      safe = safe.replace(/\(([−-]?\d+(?:\.\d+)?),\s*([−-]?\d+(?:\.\d+)?)\)/g, (_, x, y) => stash(mathCoordHtml(x, y)));
+      safe = safe.replace(/\b([−-]?\d+)\s+(\d+)\/(\d+)\b/g, (_, whole, num, den) => stash(mathMixedHtml(whole, num, den)));
+      safe = safe.replace(/\b([−-]?\d+)\/(\d+)\b/g, (_, num, den) => stash(mathFracHtml(num, den)));
+      safe = safe.replace(/([£$])(\d+(?:\.\d+)?)/g, (_, symbol, amount) => stash(mathMoneyHtml(symbol, amount)));
+      safe = safe.replace(/\b([−-]?\d+(?:\.\d+)?)%/g, (_, amount) => stash(mathPercentHtml(amount)));
+      safe = safe.replace(/(^|[^A-Za-z0-9_@])([−-]?\d+(?:\.\d+)?)(?![A-Za-z0-9_@])/g, (m, prefix, amount) => prefix + stash(mathNumberHtml(amount)));
+      return safe.replace(/@@MATH([A-Z]+)@@/g, (_, key) => snippets[placeholderIndex(key)]);
     }
     function parseFraction(raw) {
       const original = String(raw).trim().toLowerCase();
@@ -389,6 +466,7 @@
       return null;
     }
     function answerLabel(q) {
+      if (q.displayAnswer) return q.displayAnswer;
       if (q.answerType === "fraction") return fracText(q.answer);
       if (q.answerType === "money") return money(q.answer);
       return String(q.answer);
@@ -587,9 +665,10 @@
       }
       return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Angles around a point"><circle cx="${cx}" cy="${cy}" r="7" fill="#16324f"/><line x1="${cx}" y1="${cy}" x2="${cx}" y2="45" stroke="#16324f" stroke-width="4"/><line x1="${cx}" y1="${cy}" x2="326" y2="102" stroke="#16324f" stroke-width="4"/><line x1="${cx}" y1="${cy}" x2="310" y2="190" stroke="#16324f" stroke-width="4"/><line x1="${cx}" y1="${cy}" x2="105" y2="190" stroke="#16324f" stroke-width="4"/><line x1="${cx}" y1="${cy}" x2="94" y2="102" stroke="#16324f" stroke-width="4"/>${svgText(210, 30, "Angles around a point", 18, 900)}${svgText(270, 93, `${a[0]}°`, 15, 900)}${svgText(290, 164, `${a[1]}°`, 15, 900)}${svgText(210, 190, `${a[2]}°`, 15, 900)}${svgText(128, 164, `${a[3]}°`, 15, 900)}${svgText(145, 94, `?`, 20, 900)}</svg>`;
     }
-    function svgProbabilityScale(pos, marker = "?") {
+    function svgProbabilityScale(pos = null, marker = "?") {
       const w = 520, h = 130, left = 38, right = 482, y = 58;
-      const x = left + pos * (right - left);
+      const showMarker = typeof pos === "number" && Number.isFinite(pos);
+      const x = showMarker ? left + pos * (right - left) : null;
       const labels = [[0,"impossible"],[0.25,"unlikely"],[0.5,"even chance"],[0.75,"likely"],[1,"certain"]];
       const zoneColours = ["#ffe1e1", "#fff1bf", "#eef4ff", "#e1f4e4"];
       let html = "";
@@ -603,9 +682,13 @@
         html += `<line x1="${tx}" y1="${y-18}" x2="${tx}" y2="${y+18}" stroke="#16324f" stroke-width="2"/>`;
         html += svgText(tx, y + 40, l, 12, 800);
       });
-      html += `<line x1="${x}" y1="${y-42}" x2="${x}" y2="${y-16}" stroke="#ff7a00" stroke-width="4" marker-end="url(#probArrow)"/><defs><marker id="probArrow" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ff7a00"/></marker></defs>`;
-      html += svgText(x, 20, marker, 18, 900);
-      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Probability scale divided into sections">${html}</svg>`;
+      if (showMarker) {
+        html += `<line x1="${x}" y1="${y-42}" x2="${x}" y2="${y-16}" stroke="#ff7a00" stroke-width="4" marker-end="url(#probArrow)"/><defs><marker id="probArrow" markerWidth="10" markerHeight="7" refX="5" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ff7a00"/></marker></defs>`;
+        html += svgText(x, 20, marker, 18, 900);
+      } else {
+        html += svgText((left + right) / 2, 20, "Probability scale", 18, 900);
+      }
+      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Probability scale divided into clear sections">${html}</svg>`;
     }
     function svgSpinner(sections, highlightIndex = null) {
       const w = 360, h = 250, cx = 180, cy = 125, r = 82;
@@ -882,7 +965,7 @@
     }
 
     function htmlTable(headers, rows) {
-      return `<div class="table-card"><table><thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${escapeHtml(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+      return `<div class="table-card"><table><thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${mathifyText(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
     }
 
     function qBase(topic, title, diff, kind, prompt, answer, opts = {}) {
@@ -1046,8 +1129,8 @@
       });
 
       addFamily("fractions", "Fraction of an amount", (d) => {
-        const den = pick([3,4,5,6,8,10].slice(0, d+3));
-        const num = rint(1, den - 1);
+        const fr = properFractionFrom([2,3,4,5,8,10].slice(0, d+3));
+        const den = fr.den, num = fr.num;
         const unit = rint(3, 14 + d*2);
         const amount = den * unit;
         const ans = num * unit;
@@ -1058,15 +1141,16 @@
       });
 
       addFamily("fractions", "Equivalent fractions", (d) => {
-        const den = pick([3,4,5,6,7,8,9]);
-        const num = rint(1, den - 1);
-        const mult = rint(2, 6 + d);
+        const fr = properFractionFrom([2,3,4,5]);
+        const den = fr.den, num = fr.num;
+        const mult = pick([2,3,4]);
         const ans = {num: num*mult, den: den*mult};
         return qBase("fractions", "Equivalent fractions", d, "mc", `Which fraction is equivalent to ${num}/${den}?`, ans, {
           answerType: "fraction",
+          displayAnswer: `${ans.num}/${ans.den}`,
           choices: makeChoices(ans, [{num:num+1,den:den*mult},{num:num*mult,den:den*mult+1},{num:num*mult+1,den:den*mult},{num:den,den:num}], "fraction"),
-          hint: "Multiply the numerator and denominator by the same number.",
-          explanation: `${num}/${den} × ${mult}/${mult} = ${fracText(ans)}.`
+          hint: "Multiply the numerator and denominator by the same whole number.",
+          explanation: `${num}/${den} multiplied top and bottom by ${mult} gives ${ans.num}/${ans.den}.`
         });
       });
 
@@ -1082,9 +1166,8 @@
       });
 
       addFamily("fractions", "Adding and subtracting fractions", (d) => {
-        const den1 = pick([3,4,5,6,8,10].slice(0, d+3));
-        const den2 = pick([4,5,6,8,10,12].slice(0, d+3));
-        const n1 = rint(1, den1 - 1), n2 = rint(1, den2 - 1);
+        const [den1, den2] = easyDenPair([2,3,4,5,8,10].slice(0, d+4));
+        const n1 = coprimeNumerator(den1), n2 = coprimeNumerator(den2);
         const op = pick(["+", "−"]);
         let num = op === "+" ? n1*den2 + n2*den1 : n1*den2 - n2*den1;
         if (num <= 0) num = n2*den1 - n1*den2;
@@ -1531,7 +1614,7 @@
       });
 
       addFamily("probability", "Bags of counters", (d) => {
-        const red = rint(2, 8 + d), blue = rint(2, 8 + d), yellow = rint(1, 5 + d);
+        const red = rint(2, 5), blue = rint(2, 5), yellow = rint(1, 3);
         const notRed = blue + yellow, total = red + blue + yellow;
         const ans = simplify(notRed, total);
         return qBase("probability", "Bags of counters", d, "short", `A bag contains ${red} red counters, ${blue} blue counters and ${yellow} yellow counters. A counter is picked at random. What is the probability it is not red?`, ans, {
@@ -1542,16 +1625,20 @@
       });
 
       addFamily("probability", "Probability scale", (d) => {
-        const items = [
-          [0, "impossible"], [.25, "unlikely"], [.5, "even chance"], [.75, "likely"], [1, "certain"]
+        const events = [
+          ["A fair six-sided dice lands on 7.", "impossible"],
+          ["A fair coin lands on heads.", "even chance"],
+          ["A normal school day has morning before afternoon.", "certain"],
+          ["A number chosen from 1 to 10 is greater than 8.", "unlikely"],
+          ["A counter picked from a bag with 8 red counters and 2 blue counters is red.", "likely"]
         ];
-        const [pos, ans] = pick(items);
-        return qBase("probability", "Probability scale", d, "mc", `Which probability word best matches the arrow on the scale?`, ans, {
+        const [event, ans] = pick(events);
+        return qBase("probability", "Probability scale", d, "mc", `Use the probability scale. Which word best describes this event: ${event}`, ans, {
           answerType: "text",
-          diagram: svgProbabilityScale(pos),
+          diagram: svgProbabilityScale(null),
           choices: ["impossible", "unlikely", "even chance", "likely", "certain"].map(v => ({value:v, label:v})),
-          hint: "Read the labels along the probability scale.",
-          explanation: `The arrow points to ${ans}.`
+          hint: "Think about whether the event cannot happen, might happen, is a half chance, will probably happen or must happen.",
+          explanation: `The event is best described as ${ans}.`
         });
       });
 
@@ -1766,10 +1853,10 @@
       });
 
       addFamily("fractions", "Mixed-number arithmetic", (d) => {
-        const den = pick([3,4,5,6,8].slice(0, d+2));
+        const den = pick([2,3,4,5,8].slice(0, d+2));
         const whole = rint(1, 3 + Math.floor(d/2));
-        const n = rint(1, den-1);
-        const subN = rint(1, den-1);
+        const n = coprimeNumerator(den);
+        const subN = coprimeNumerator(den);
         let num = whole * den + n - subN;
         if (num <= 0) num += den;
         const ans = simplify(num, den);
@@ -1781,9 +1868,12 @@
       });
 
       addFamily("fractions", "Average of fractions", (d) => {
-        const den1 = pick([4,5,6,8].slice(0, d+2)), den2 = pick([5,6,8,10].slice(0, d+2));
-        const n1 = rint(1, den1-1), n2 = rint(1, den2-1);
-        const ans = simplify(n1*den2 + n2*den1, 2*den1*den2);
+        const den = pick([4,5,8,10].slice(0, Math.min(4, d+2)));
+        const vals = [];
+        for (let n = 1; n < den; n++) if (gcd(n, den) === 1) vals.push(n);
+        const pair = shuffle(vals).slice(0,2).sort((a,b)=>a-b);
+        const n1 = pair[0] || 1, n2 = pair[1] || den-1, den1 = den, den2 = den;
+        const ans = simplify(n1 + n2, 2*den);
         return qBase("fractions", "Average of fractions", d, "short", `Find the mean average of ${n1}/${den1} and ${n2}/${den2}.`, ans, {
           answerType: "fraction",
           hint: "Add the two fractions, then divide by 2.",
@@ -2365,8 +2455,8 @@
       }, 10);
 
       addFamily("fractions", "Mixed number operations", (d) => {
-        const den = pick([3,4,5,6,8]);
-        const w1 = rint(1, 3+d), w2 = rint(1, 2+d), n1 = rint(1, den-1), n2 = rint(1, den-1);
+        const den = pick([2,3,4,5,8]);
+        const w1 = rint(1, 3+d), w2 = rint(1, 2+d), n1 = coprimeNumerator(den), n2 = coprimeNumerator(den);
         const add = Math.random() < 0.55;
         let num = add ? (w1*den+n1) + (w2*den+n2) : (w1*den+n1) - Math.min(w1*den+n1-1, w2*den+n2);
         if (num <= 0) num = Math.abs(num) + den;
@@ -2380,8 +2470,9 @@
       }, 10);
 
       addFamily("fractions", "Fraction multiplication and division", (d) => {
-        const den1 = pick([3,4,5,6,8,9]), den2 = pick([3,4,5,6,8]);
-        const n1 = rint(1, den1-1), n2 = rint(1, den2-1);
+        const smallPairs = [[2,2],[2,3],[2,4],[2,5],[3,3],[3,4],[3,5],[4,4],[4,5]];
+        const [den1, den2] = pick(smallPairs);
+        const n1 = coprimeNumerator(den1), n2 = coprimeNumerator(den2);
         const divide = Math.random() < 0.45;
         const ans = divide ? simplify(n1*den2, den1*n2) : simplify(n1*n2, den1*den2);
         return qBase("fractions", "Fraction multiplication and division", d, "short", `Work out ${n1}/${den1} ${divide ? "÷" : "×"} ${n2}/${den2}. Give your answer in simplest form.`, ans, {
@@ -2418,8 +2509,11 @@
       }, 10);
 
       addFamily("fractions", "Average of fractions", (d) => {
-        const den = pick([4,5,6,8,10]);
-        const a = rint(1, den-2), b = rint(a+1, den-1);
+        const den = pick([4,5,8,10]);
+        const vals = [];
+        for (let n = 1; n < den; n++) if (gcd(n, den) === 1) vals.push(n);
+        const pair = shuffle(vals).slice(0,2).sort((x,y)=>x-y);
+        const a = pair[0] || 1, b = pair[1] || den-1;
         const ans = simplify(a + b, 2*den);
         return qBase("fractions", "Average of fractions", d, "short", `Find the average (mean) of ${a}/${den} and ${b}/${den}. Give your answer as a simplified fraction.`, ans, {
           answerType: "fraction",
@@ -2824,14 +2918,20 @@
       }, 10);
 
       addFamily("probability", "Probability scale with sections", (d) => {
-        const items = [[0,"impossible"],[0.25,"unlikely"],[0.5,"even chance"],[0.75,"likely"],[1,"certain"]];
-        const [pos, ans] = pick(items);
-        return qBase("probability", "Probability scale with sections", d, "mc", `Which probability word best describes the arrow?`, ans, {
+        const cases = [
+          ["A spinner has 4 red sections and 4 blue sections. It lands on red.", "even chance"],
+          ["A bag has 1 green counter and 9 yellow counters. A green counter is picked.", "unlikely"],
+          ["A bag has 9 green counters and 1 yellow counter. A green counter is picked.", "likely"],
+          ["A normal dice lands on a number from 1 to 6.", "certain"],
+          ["A normal dice lands on 0.", "impossible"]
+        ];
+        const [event, ans] = pick(cases);
+        return qBase("probability", "Probability scale with sections", d, "mc", `Use the probability scale to classify this event: ${event}`, ans, {
           answerType: "text",
-          diagram: svgProbabilityScale(pos),
+          diagram: svgProbabilityScale(null),
           choices: ["impossible", "unlikely", "even chance", "likely", "certain"].map(v => ({value:v, label:v})),
-          hint: "Use the divided probability scale: left is less likely and right is more likely.",
-          explanation: `The arrow is best described as ${ans}.`
+          hint: "Use the divided scale from impossible on the left to certain on the right.",
+          explanation: `This event is ${ans}.`
         });
       }, 8);
 
@@ -3003,9 +3103,9 @@
       }, 10);
 
       addFamily("fractions", "Extra fraction operations", (d) => {
-        const denChoices = [3, 4, 5, 6, 8, 10, 12].slice(0, 4 + Math.min(d, 3));
-        let den1 = pick(denChoices), den2 = pick(denChoices);
-        let num1 = rint(1, den1 - 1), num2 = rint(1, den2 - 1);
+        const denChoices = [2, 3, 4, 5, 8, 10].slice(0, 4 + Math.min(d, 3));
+        let [den1, den2] = easyDenPair(denChoices);
+        let num1 = coprimeNumerator(den1), num2 = coprimeNumerator(den2);
         let op = pick(["+", "−"]);
         if (op === "−" && num1 / den1 < num2 / den2) { [num1, num2] = [num2, num1]; [den1, den2] = [den2, den1]; }
         const rawNum = op === "+" ? num1 * den2 + num2 * den1 : num1 * den2 - num2 * den1;
@@ -3047,8 +3147,8 @@
       }, 10);
 
       addFamily("fractions", "Fraction of a quantity", (d) => {
-        const den = pick([3, 4, 5, 6, 8, 10, 12].slice(0, 4 + Math.min(d, 3)));
-        const num = rint(1, den - 1);
+        const fr = properFractionFrom([2, 3, 4, 5, 8, 10].slice(0, 4 + Math.min(d, 3)));
+        const den = fr.den, num = fr.num;
         const quantity = den * rint(5 + d, 18 + 3*d);
         const ans = quantity / den * num;
         return qBase("fractions", "Fraction of a quantity", d, "mc", `What is ${num}/${den} of ${quantity}?`, ans, {
@@ -3311,20 +3411,20 @@
       }, 10);
 
       addFamily("probability", "Probability scale language variants", (d) => {
-        const items = [
-          [0, "impossible"],
-          [0.25, "unlikely"],
-          [0.5, "even chance"],
-          [0.75, "likely"],
-          [1, "certain"]
+        const scenarios = [
+          ["choosing a black counter from a bag with only red counters", "impossible"],
+          ["choosing the letter A from the letters A, B, C and D", "unlikely"],
+          ["getting heads when flipping a fair coin", "even chance"],
+          ["choosing a vowel from the letters A, E, I, O, U and B", "likely"],
+          ["choosing a number less than 7 from the numbers 1 to 6", "certain"]
         ];
-        const [pos, ans] = pick(items);
-        return qBase("probability", "Probability scale language variants", d, "mc", "The marker is placed on the probability scale. Which word best describes the chance?", ans, {
+        const [scenario, ans] = pick(scenarios);
+        return qBase("probability", "Probability scale language variants", d, "mc", `Which word on the scale best describes ${scenario}?`, ans, {
           answerType: "text",
-          diagram: svgProbabilityScale(pos, "marker"),
+          diagram: svgProbabilityScale(null),
           choices: textChoices(["impossible", "unlikely", "even chance", "likely", "certain"]),
-          hint: "Read from left to right: impossible, unlikely, even chance, likely, certain.",
-          explanation: `The marker shows ${ans}.`
+          hint: "Use the scale as a guide, then decide from the situation.",
+          explanation: `The situation is ${ans}.`
         });
       }, 10);
 
@@ -3545,8 +3645,9 @@
       }, 10);
 
       addFamily("fractions", "Exam fraction arithmetic", (d) => {
-        let den1 = pick([3,4,5,6,8,10,12].slice(0,4+Math.min(d,3))), den2 = pick([3,4,5,6,8,10,12].slice(0,4+Math.min(d,3)));
-        let n1 = rint(1, den1-1), n2 = rint(1, den2-1);
+        const denChoices = [2,3,4];
+        let [den1, den2] = easyDenPair(denChoices);
+        let n1 = coprimeNumerator(den1), n2 = coprimeNumerator(den2);
         const op = pick(["+", "−", "×"]);
         if (op === "−" && n1/den1 < n2/den2) { [n1,n2] = [n2,n1]; [den1,den2] = [den2,den1]; }
         let ans;
@@ -3559,8 +3660,8 @@
       }, 10);
 
       addFamily("fractions", "Exam mixed numbers", (d) => {
-        const den = pick([3,4,5,6,8]);
-        const whole = rint(1, 3 + d), n = rint(1, den-1), sub = rint(1, den-1);
+        const den = pick([2,3,4,5,8]);
+        const whole = rint(1, 3 + d), n = coprimeNumerator(den), sub = coprimeNumerator(den);
         const op = pick(["add", "subtract"]);
         let ans;
         if (op === "add") ans = simplify(whole*den+n+sub, den);
@@ -3585,16 +3686,18 @@
       }, 10);
 
       addFamily("fractions", "Exam equivalent fractions", (d) => {
-        const den = pick([3,4,5,6,7,8,9,10]), num = rint(1, den-1), mult = rint(2, 8 + d);
+        const fr = properFractionFrom([2,3,4,5]);
+        const den = fr.den, num = fr.num, mult = pick([2,3,4]);
         const ans = {num:num*mult, den:den*mult};
         return qBase("fractions", "Exam equivalent fractions", d, "mc", `Which fraction is equivalent to ${num}/${den}?`, ans, {
-          answerType:"fraction", choices:makeChoices(ans, [{num:num+1,den:den*mult},{num:num*mult,den:den*mult+1},{num:num*mult+1,den:den*mult},{num:den,den:num}], "fraction"),
-          hint:"Multiply top and bottom by the same number.", explanation:`${num}/${den} = ${fracText(ans)}.`
+          answerType:"fraction", displayAnswer:`${ans.num}/${ans.den}`, choices:makeChoices(ans, [{num:num+1,den:den*mult},{num:num*mult,den:den*mult+1},{num:num*mult+1,den:den*mult},{num:den,den:num}], "fraction"),
+          hint:"Multiply top and bottom by the same whole number.", explanation:`${num}/${den} multiplied top and bottom by ${mult} gives ${ans.num}/${ans.den}.`
         });
       }, 10);
 
       addFamily("fractions", "Exam fraction of amount", (d) => {
-        const den = pick([3,4,5,6,8,10,12].slice(0,4+Math.min(d,3))), num = rint(1,den-1), unit = rint(4+d, 18+d*3), amount = den * unit, ans = num * unit;
+        const fr = properFractionFrom([2,3,4,5,8,10].slice(0,4+Math.min(d,3)));
+        const den = fr.den, num = fr.num, unit = rint(4+d, 18+d*3), amount = den * unit, ans = num * unit;
         return qBase("fractions", "Exam fraction of amount", d, "mc", `What is ${num}/${den} of ${amount}?`, ans, {
           choices:makeChoices(ans, [unit, ans+den, Math.max(1, ans-den), amount-ans]),
           hint:`Find 1/${den} first.`, explanation:`${amount} ÷ ${den} = ${unit}; ${unit} × ${num} = ${ans}.`
@@ -3812,15 +3915,21 @@
       }, 10);
 
       addFamily("probability", "Exam spinner sections", (d) => {
-        const red = rint(1,5+d), blue = rint(1,5+d), green = rint(1,4+d), total = red+blue+green;
+        const red = rint(1,4), blue = rint(1,4), green = rint(1,4), total = red+blue+green;
         const colour = pick([["red",red],["blue",blue],["green",green]]), ans = simplify(colour[1], total);
         return qBase("probability", "Exam spinner sections", d, "short", `The spinner has ${red} red sections, ${blue} blue sections and ${green} green sections. What is the probability of landing on ${colour[0]}?`, ans, {answerType:"fraction", diagram:svgSpinner([{label:"R",value:red},{label:"B",value:blue},{label:"G",value:green}]), hint:"Probability is favourable sections over total sections.", explanation:`The probability is ${fracText(ans)}.`});
       }, 10);
 
       addFamily("probability", "Exam probability scale sections", (d) => {
-        const choices = [[0,"impossible"],[0.25,"unlikely"],[0.5,"even chance"],[0.75,"likely"],[1,"certain"]];
-        const [pos,ans] = pick(choices);
-        return qBase("probability", "Exam probability scale sections", d, "mc", `Which probability word best matches the arrow on the divided scale?`, ans, {answerType:"text", diagram:svgProbabilityScale(pos), choices:textOptions(["impossible","unlikely","even chance","likely","certain"]), hint:"Read the labelled sections on the scale.", explanation:`The arrow shows ${ans}.`});
+        const cases = [
+          ["A card chosen from A, B, C and D is A.", "unlikely"],
+          ["A fair coin lands on tails.", "even chance"],
+          ["A bag has 6 red counters and 2 blue counters. A red counter is picked.", "likely"],
+          ["A normal dice lands on a number from 1 to 6.", "certain"],
+          ["A normal dice lands on 8.", "impossible"]
+        ];
+        const [event, ans] = pick(cases);
+        return qBase("probability", "Exam probability scale sections", d, "mc", `Use the divided probability scale. Which word best describes this event: ${event}`, ans, {answerType:"text", diagram:svgProbabilityScale(null), choices:textOptions(["impossible","unlikely","even chance","likely","certain"]), hint:"Decide from the event; the scale is only a guide.", explanation:`The event is ${ans}.`});
       }, 10);
 
       addFamily("probability", "Exam complements", (d) => {
@@ -4075,7 +4184,7 @@
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "choice";
-          btn.innerHTML = `<span class="letter">${letters[idx]}</span><span class="label">${q.answerType === "fraction" && choice.value && typeof choice.value === "object" ? mathFracHtml(simplify(choice.value.num, choice.value.den).num, simplify(choice.value.num, choice.value.den).den) : mathifyText(choice.label)}</span>`;
+          btn.innerHTML = `<span class="letter">${letters[idx]}</span><span class="label">${q.answerType === "fraction" && choice.value && typeof choice.value === "object" ? mathFractionChoiceHtml(choice.value) : mathifyText(choice.label)}</span>`;
           if (resp && resp.choiceIndex === idx) btn.classList.add("selected");
           if (examState.submitted) {
             btn.disabled = true;
