@@ -18,18 +18,36 @@
     .exam-title{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:12px}
     h1{font-size:1.65rem;margin:0;letter-spacing:.01em;text-transform:uppercase}.subtitle{margin:.35rem 0 0;color:var(--muted);font-size:.98rem}
     .timer-box{border:2px solid #111;border-radius:6px;padding:9px 13px;text-align:center;min-width:132px;background:#fff;font-weight:700}.timer{font-size:1.35rem;display:block}
-    .exam-rules{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}.rule-list{margin:0;padding-left:1.25rem;color:#1f2937}.rule-list li{margin:.15rem 0}.paper-meta{display:none}.meta-pill{border:1px solid #111;border-radius:999px;padding:6px 10px;font-size:.9rem;background:#fff}
+    .exam-rules{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}.rule-list{margin:0;padding-left:1.25rem;color:#1f2937}.rule-list li{margin:.15rem 0}.paper-meta{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.meta-pill{border:1px solid #111;border-radius:999px;padding:6px 10px;font-size:.9rem;background:#fff}
     .screen{margin-top:14px}.hidden{display:none!important}.panel{background:var(--paper);border:1px solid #c9c9c9;border-radius:8px;box-shadow:var(--shadow);padding:18px}
-    .start-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}.start-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.bank-note{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:12px;color:var(--muted)}
+    .start-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:16px}.start-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.bank-note{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:12px;color:var(--muted)}
     button{font:inherit;border:0;border-radius:6px;background:var(--accent);color:white;font-weight:700;padding:10px 14px;cursor:pointer;box-shadow:0 5px 13px rgba(29,78,216,.18)}
     button:hover:not(:disabled),button:focus-visible:not(:disabled){filter:brightness(.96);outline:2px solid rgba(29,78,216,.22);outline-offset:2px}button:disabled{opacity:.55;cursor:not-allowed}.secondary{background:#fff;color:#111;border:1px solid #111;box-shadow:none}.danger{background:var(--bad)}.success{background:var(--good)}
-    .exam-layout{display:grid;grid-template-columns:minmax(0,1fr) 258px;gap:14px;align-items:start}.question-card{background:var(--paper);border:1px solid #111;border-radius:6px;box-shadow:var(--shadow);min-height:560px;display:flex;flex-direction:column}.question-head{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #111;padding:12px 14px;background:#f9fafb}.q-number{font-weight:800}.q-tags{display:flex;gap:6px;flex-wrap:wrap}.tag{border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:.82rem;background:#fff;color:#374151}.question-body{padding:16px 16px 10px;flex:1}.question-text{font-size:1.14rem;font-weight:700;margin:0 0 10px}.diagram-wrap{margin:6px 0 10px;display:grid;place-items:center;gap:2px;overflow:auto;padding:0}.diagram-wrap:empty{display:none}.diagram{max-width:min(100%,430px);max-height:225px;width:auto;height:auto;background:#fff;border:1px solid #e5e7eb;border-radius:5px;margin:0 auto;display:block}.diagram-wrap .table-card{max-width:min(100%,520px);margin:0;box-shadow:none}.table-card{overflow:auto;border:1px solid #111;border-radius:4px;margin:8px 0 0;background:#fff}table{border-collapse:collapse;width:100%;min-width:340px}th,td{border:1px solid #c9c9c9;padding:8px;text-align:left}th{background:#f3f4f6}
+    .exam-layout{display:grid;grid-template-columns:minmax(0,1fr) 258px;gap:14px;align-items:start}.question-card{background:var(--paper);border:1px solid #111;border-radius:6px;box-shadow:var(--shadow);min-height:560px;display:flex;flex-direction:column}.question-head{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #111;padding:12px 14px;background:#f9fafb}.q-number{font-weight:800}.q-tags{display:flex;gap:6px;flex-wrap:wrap}.tag{border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:.82rem;background:#fff;color:#374151}.question-body{padding:16px 16px 10px;flex:1}.question-text{font-size:1.14rem;font-weight:700;margin:0 0 10px}.diagram-wrap{margin:4px 0 8px;display:grid;place-items:center;gap:2px;overflow:auto;padding:0}.diagram-wrap:empty{display:none}.diagram{max-width:min(100%,660px);max-height:360px;width:auto;height:auto;background:#fff;border:1px solid #e5e7eb;border-radius:5px;margin:0 auto;display:block}.diagram-wrap .table-card{max-width:min(100%,520px);margin:0;box-shadow:none}.table-card{overflow:auto;border:1px solid #111;border-radius:4px;margin:8px 0 0;background:#fff}table{border-collapse:collapse;width:100%;min-width:340px}th,td{border:1px solid #c9c9c9;padding:8px;text-align:left}th{background:#f3f4f6}
     .choices{display:grid;gap:8px;margin-top:10px}.choice{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:8px;border:1.7px solid #111;border-radius:6px;background:#fff;color:#111;text-align:left;padding:0;box-shadow:none;overflow:hidden}.choice .letter{align-self:stretch;display:grid;place-items:center;background:#f3f4f6;border-right:1px solid #111;font-weight:900}.choice .label{padding:10px 10px}.choice.selected{outline:3px solid var(--accent);background:#eff6ff}.choice.correct{border-color:var(--good);background:#ecfdf5}.choice.wrong{border-color:var(--bad);background:#fef2f2}.choice:disabled{opacity:1;cursor:default}
     .answer-row{display:grid;gap:8px;margin-top:12px}.answer-row label{font-weight:700}.answer-input{font:inherit;border:1.8px solid #111;border-radius:6px;padding:12px;min-height:46px;width:100%}.answer-input:focus{outline:3px solid rgba(29,78,216,.24);border-color:var(--accent)}.answer-input[disabled]{background:#f9fafb;color:#111}
     .exam-controls{border-top:1px solid #111;padding:12px 14px;display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}.left-controls,.right-controls{display:flex;gap:8px;flex-wrap:wrap}.progress-mini{color:var(--muted);font-size:.92rem}.side-panel{background:var(--paper);border:1px solid #111;border-radius:6px;box-shadow:var(--shadow);padding:12px;position:sticky;top:10px}.side-panel h2{font-size:1rem;margin:0 0 8px}.answer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.nav-btn{border:1px solid #111;background:#fff;color:#111;box-shadow:none;border-radius:4px;padding:8px 0;font-size:.88rem}.nav-btn.answered{background:#dbeafe}.nav-btn.current{outline:3px solid #111}.nav-btn.review{box-shadow:inset 0 -4px 0 #fbbf24}.nav-btn.correct{background:var(--green-bg);border-color:var(--good)}.nav-btn.wrong{background:var(--red-bg);border-color:var(--bad)}.nav-btn.unanswered{background:#f3f4f6;color:#6b7280}.legend{display:grid;gap:5px;margin-top:12px;font-size:.85rem;color:#4b5563}.legend span{display:inline-flex;align-items:center;gap:6px}.swatch{width:14px;height:14px;border:1px solid #111;display:inline-block}.swatch.answered{background:#dbeafe}.swatch.review{background:#fff;box-shadow:inset 0 -4px 0 #fbbf24}.swatch.correct{background:var(--green-bg)}.swatch.wrong{background:var(--red-bg)}
     .review-feedback{border-radius:6px;padding:12px;margin-top:12px;border:1px solid var(--line);background:#f8fafc}.review-feedback.good{border-color:var(--good);background:var(--green-bg)}.review-feedback.bad{border-color:var(--bad);background:var(--red-bg)}.review-feedback strong{display:block;margin-bottom:4px}.summary-top{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}.score-large{font-size:3rem;font-weight:900;line-height:1}.pct-large{font-size:1.6rem;font-weight:800;color:var(--accent)}.heatmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:14px}.heat-tile{border:2px solid #111;border-radius:7px;padding:11px;background:#fff}.heat-tile.green{background:var(--green-bg);border-color:var(--good)}.heat-tile.amber{background:var(--amber-bg);border-color:var(--amber)}.heat-tile.red{background:var(--red-bg);border-color:var(--bad)}.heat-title{font-weight:900}.heat-status{font-size:.9rem;margin-top:4px}.heat-feedback{font-size:.88rem;color:#374151;margin-top:6px}.results-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.question-review-list{margin-top:16px}.mini-table{width:100%;border-collapse:collapse}.mini-table th,.mini-table td{padding:7px;border:1px solid #d1d5db;font-size:.92rem}.print-note{color:var(--muted);font-size:.9rem;margin-top:8px}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     @media(max-width:860px){.start-grid,.exam-layout,.summary-top{grid-template-columns:1fr}.side-panel{position:static}.exam-title,.exam-rules{grid-template-columns:1fr}.paper-meta{justify-content:flex-start}.question-card{min-height:0}.answer-grid{grid-template-columns:repeat(10,1fr)}h1{font-size:1.25rem}.diagram{max-height:205px}.timer-box{text-align:left}}
+
+
+    /* Clean UK 11+ display refinements */
+    .diagram{max-width:min(100%,660px);max-height:360px;border-radius:4px;border:1px solid #cfd6df;background:#fff}
+    .diagram-wrap{margin:4px 0 8px;gap:0;padding:0}
+    .math-frac{font-size:1.05em;vertical-align:-0.35em;margin:0 .08em}
+    .choice .label math,.question-text math,.review-feedback math,.mini-table math{font-size:1.08em;vertical-align:-0.35em}
+    .answer-row{display:block;margin-top:12px}
+    .standard-answer-group{display:grid;gap:8px}
+    .fraction-answer-group{display:grid;gap:8px;align-items:start;justify-items:start}
+    .fraction-entry{display:inline-grid;grid-template-rows:auto 3px auto;justify-items:center;align-items:center;gap:5px;padding:10px 14px;border:1.8px solid #111;border-radius:8px;background:#fff;min-width:110px}
+    .fraction-entry input{width:82px;min-height:42px;text-align:center;border:1.7px solid #111;border-radius:6px;font:inherit;font-weight:800;padding:6px;background:#fff}
+    .fraction-entry input:focus{outline:3px solid rgba(29,78,216,.24);border-color:var(--accent)}
+    .fraction-entry input:disabled{background:#f3f4f6;color:#111}
+    .fraction-line{width:92px;height:3px;background:#111;border-radius:999px;display:block}
+    .fraction-help{font-size:.88rem;color:var(--muted)}
+    .bank-note{font-size:.95rem}
+
   </style>
 </head>
 <body>
@@ -48,7 +66,7 @@
           <li>No calculator. Work quickly and carefully.</li>
           <li>Each question is worth 1 mark. Unanswered questions score 0.</li>
         </ol>
-        <div class="paper-meta" aria-hidden="true"></div>
+        <div class="paper-meta hidden" aria-hidden="true"></div>
       </div>
     </header>
 
@@ -56,15 +74,16 @@
       <div class="start-grid">
         <div class="panel">
           <h2>Exam practice paper</h2>
-          <p>Start when you are ready. Work carefully and move on if a question is taking too long.</p>
+          <p>Answer one question at a time. Work steadily, check your units, and use the answer sheet to move around the paper.</p>
           <div class="bank-note hidden" id="bankInfo" aria-hidden="true"></div>
           <div class="start-actions">
-            <button type="button" id="startExamBtn">Start exam practice</button>
+            <button type="button" id="startExamBtn">Start practice paper</button>
             <button type="button" class="secondary hidden" id="demoExamBtn" aria-hidden="true">Start short demo paper</button>
           </div>
         </div>
-        <aside class="panel hidden" aria-hidden="true">
-          <h2>Paper coverage</h2>
+        <aside class="panel">
+          <h2>Before you start</h2>
+          <p>No calculator. Read the question carefully and move on if you get stuck.</p>
         </aside>
       </div>
     </section>
@@ -84,8 +103,19 @@
             <div class="diagram-wrap" id="diagramWrap"></div>
             <div class="choices" id="choicesWrap"></div>
             <div class="answer-row hidden" id="shortAnswerWrap">
-              <label for="shortAnswerInput">Your answer</label>
-              <input id="shortAnswerInput" class="answer-input" type="text" autocomplete="off" />
+              <div class="standard-answer-group" id="standardAnswerGroup">
+                <label for="shortAnswerInput">Your answer</label>
+                <input id="shortAnswerInput" class="answer-input" type="text" autocomplete="off" />
+              </div>
+              <div class="fraction-answer-group hidden" id="fractionAnswerGroup">
+                <label>Your answer as a fraction</label>
+                <div class="fraction-entry" aria-label="Fraction answer">
+                  <input id="fractionNumeratorInput" type="number" inputmode="numeric" autocomplete="off" aria-label="Numerator" />
+                  <span class="fraction-line" aria-hidden="true"></span>
+                  <input id="fractionDenominatorInput" type="number" inputmode="numeric" autocomplete="off" aria-label="Denominator" />
+                </div>
+                <span class="fraction-help">Enter the numerator in the top box and the denominator in the bottom box.</span>
+              </div>
             </div>
             <div id="reviewFeedback" class="review-feedback hidden"></div>
           </div>
@@ -326,6 +356,16 @@
       if (s.den === 1) return String(s.num);
       return s.num + "/" + s.den;
     }
+
+    function mathFracHtml(num, den) {
+      return `<math class="math-frac" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(num)} over ${escapeHtml(den)}"><mfrac><mn>${escapeHtml(num)}</mn><mn>${escapeHtml(den)}</mn></mfrac></math>`;
+    }
+    function mathifyText(value) {
+      let safe = escapeHtml(String(value ?? ""));
+      safe = safe.replace(/\b(\d+)\s+(\d+)\/(\d+)\b/g, (_, whole, num, den) => `${whole}${mathFracHtml(num, den)}`);
+      safe = safe.replace(/\b(\d+)\/(\d+)\b/g, (_, num, den) => mathFracHtml(num, den));
+      return safe;
+    }
     function parseFraction(raw) {
       const original = String(raw).trim().toLowerCase();
       const mixedText = original.replace(/\s+and\s+/g, " ");
@@ -439,6 +479,35 @@
     }
     function svgText(x, y, text, size = 16, weight = 700, anchor = "middle") {
       return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="Trebuchet MS, Segoe UI, Arial" font-size="${size}" font-weight="${weight}" fill="#16324f">${escapeHtml(text)}</text>`;
+    }
+
+    function niceAxisMax(max) {
+      max = Math.max(1, Number(max) || 1);
+      if (max <= 10) return 10;
+      if (max <= 20) return 20;
+      if (max <= 30) return 30;
+      if (max <= 50) return 50;
+      if (max <= 100) return 100;
+      return Math.ceil(max / 20) * 20;
+    }
+    function axisMajorStep(axisMax) {
+      if (axisMax <= 10) return 2;
+      if (axisMax <= 20) return 5;
+      if (axisMax <= 50) return 10;
+      return 20;
+    }
+    function easyGraphValue(min, max, step = 5) {
+      const lo = Math.ceil(min / step) * step;
+      const hi = Math.floor(max / step) * step;
+      return rint(lo / step, hi / step) * step;
+    }
+    function easyCountValue(min, max, step = 2) {
+      const lo = Math.ceil(min / step) * step;
+      const hi = Math.floor(max / step) * step;
+      return rint(lo / step, hi / step) * step;
+    }
+    function simplePieValues() {
+      return shuffle(pick([[5,5,5,5],[4,4,6,6],[5,10,10,15],[8,8,12,12],[10,10,5,15],[6,6,9,9]]));
     }
     function svgNumberLine(min, max, arrowValue, label = "?") {
       const w = 520, h = 112, left = 42, right = 478, y = 62;
@@ -565,46 +634,58 @@
       return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Spinner diagram with ${total} equal sections">${html}</svg>`;
     }
     function svgBarChart(labels, values, title = "Bar chart") {
-      const w = 560, h = 310, left = 62, top = 42, chartH = 200, chartW = 440;
-      const max = Math.max(...values, 1);
+      const w = 640, h = 360, left = 78, top = 46, chartH = 238, chartW = 500;
+      const max = Math.max(...values.map(Number), 1);
+      const axisMax = niceAxisMax(max);
+      const major = axisMajorStep(axisMax);
+      const minor = axisMax <= 20 ? 1 : axisMax <= 50 ? 5 : 10;
       const stepW = chartW / values.length;
-      let html = svgText(w/2, 25, title, 18, 900);
-      html += `<line x1="${left}" y1="${top}" x2="${left}" y2="${top+chartH}" stroke="#16324f" stroke-width="3"/><line x1="${left}" y1="${top+chartH}" x2="${left+chartW}" y2="${top+chartH}" stroke="#16324f" stroke-width="3"/>`;
-      for (let i = 0; i <= 4; i++) {
-        const y = top + chartH - chartH * i / 4;
-        const val = Math.round(max * i / 4);
-        html += `<line x1="${left-5}" y1="${y}" x2="${left+chartW}" y2="${y}" stroke="#d8e4f5" stroke-width="1"/>`;
-        html += svgText(left - 12, y + 5, val, 12, 700, "end");
+      const yFor = v => top + chartH - (Number(v) / axisMax) * chartH;
+      let html = svgText(w/2, 24, title, 19, 900);
+      for (let v = 0; v <= axisMax; v += minor) {
+        const y = yFor(v);
+        const isMajor = v % major === 0;
+        html += `<line x1="${left}" y1="${y}" x2="${left+chartW}" y2="${y}" stroke="${isMajor ? '#c7d2df' : '#edf2f7'}" stroke-width="${isMajor ? 1.2 : .7}"/>`;
+      }
+      html += `<line x1="${left}" y1="${top}" x2="${left}" y2="${top+chartH}" stroke="#111827" stroke-width="3"/>`;
+      html += `<line x1="${left}" y1="${top+chartH}" x2="${left+chartW}" y2="${top+chartH}" stroke="#111827" stroke-width="3"/>`;
+      for (let v = 0; v <= axisMax; v += major) {
+        const y = yFor(v);
+        html += `<line x1="${left-7}" y1="${y}" x2="${left}" y2="${y}" stroke="#111827" stroke-width="2"/>`;
+        html += svgText(left - 12, y + 5, v, 13, 800, "end");
       }
       values.forEach((v, i) => {
-        const bh = chartH * v / max;
-        const x = left + i * stepW + stepW * .18;
-        const bw = stepW * .64;
+        const bh = Math.max(0, chartH * Number(v) / axisMax);
+        const x = left + i * stepW + stepW * .20;
+        const bw = stepW * .60;
         const y = top + chartH - bh;
-        html += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="#cfe3ff" stroke="#16324f" stroke-width="2"/>`;
-        html += svgText(x + bw/2, top + chartH + 23, labels[i], 12, 800);
+        html += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="#dbeafe" stroke="#111827" stroke-width="2.4"/>`;
+        html += svgText(x + bw/2, top + chartH + 28, labels[i], 13, 800);
       });
-      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Bar chart">${html}</svg>`;
+      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Bar chart with a clear scale from 0 to ${axisMax}">${html}</svg>`;
     }
+
     function svgPieChart(labels, values, title = "Pie chart") {
-      const w = 410, h = 300, cx = 140, cy = 155, r = 86;
-      const total = values.reduce((a,b)=>a+b,0);
-      const colours = ["#d7ecff", "#ffe6a7", "#d9f2dd", "#efd9ff", "#ffd6d6", "#d7f5ff"];
-      let html = svgText(w/2, 25, title, 18, 900);
+      const w = 520, h = 330, cx = 170, cy = 170, r = 104;
+      const total = values.reduce((a,b)=>a+Number(b),0);
+      const colours = ["#dbeafe", "#fef3c7", "#dcfce7", "#ede9fe", "#fee2e2", "#cffafe"];
+      let html = svgText(w/2, 26, title, 19, 900);
       let angle = -Math.PI / 2;
       values.forEach((v, i) => {
-        const slice = v / total * Math.PI * 2;
+        const slice = Number(v) / total * Math.PI * 2;
         const end = angle + slice;
         const x1 = cx + r * Math.cos(angle), y1 = cy + r * Math.sin(angle);
         const x2 = cx + r * Math.cos(end), y2 = cy + r * Math.sin(end);
         const large = slice > Math.PI ? 1 : 0;
-        html += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z" fill="${colours[i % colours.length]}" stroke="#16324f" stroke-width="2"/>`;
-        html += `<rect x="260" y="${80 + i*28}" width="17" height="17" fill="${colours[i % colours.length]}" stroke="#16324f"/>`;
-        html += svgText(286, 94 + i*28, `${labels[i]}: ${v}`, 13, 800, "start");
+        html += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z" fill="${colours[i % colours.length]}" stroke="#111827" stroke-width="2.4"/>`;
+        html += `<rect x="330" y="${84 + i*34}" width="20" height="20" fill="${colours[i % colours.length]}" stroke="#111827" stroke-width="1.5"/>`;
+        html += svgText(360, 100 + i*34, `${labels[i]}: ${v}`, 14, 800, "start");
         angle = end;
       });
-      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Pie chart">${html}</svg>`;
+      html += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#111827" stroke-width="2.8"/>`;
+      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Pie chart with clear labelled sections">${html}</svg>`;
     }
+
     function svgNet(labels) {
       const size = 58, x0 = 142, y0 = 38;
       const pos = {B:[1,0], C:[0,1], A:[1,1], D:[2,1], E:[3,1], F:[1,2]};
@@ -695,21 +776,17 @@
     }
 
     function svgVennDiagram() {
-      const w = 420, h = 270;
-      let html = svgText(210, 24, "Venn diagram", 18, 900);
-      html += `<rect x="48" y="45" width="324" height="190" fill="#fff" stroke="#16324f" stroke-width="2"/>`;
-      html += `<circle cx="160" cy="128" r="74" fill="#d7ecff" fill-opacity="0.45" stroke="#16324f" stroke-width="2"/>`;
-      html += `<circle cx="260" cy="128" r="74" fill="#ffe6a7" fill-opacity="0.45" stroke="#16324f" stroke-width="2"/>`;
-      html += `<circle cx="210" cy="176" r="74" fill="#d9f2dd" fill-opacity="0.45" stroke="#16324f" stroke-width="2"/>`;
-      html += svgText(130, 58, "multiples of 2", 12, 800);
-      html += svgText(290, 58, "multiples of 3", 12, 800);
-      html += svgText(210, 247, "prime numbers", 12, 800);
-      html += svgText(210, 111, "X", 18, 900);
-      html += svgText(210, 181, "Y", 18, 900);
-      html += svgText(72, 218, "Z", 18, 900);
-      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Venn diagram with three sets">${html}</svg>`;
+      const w = 520, h = 310;
+      let html = svgText(260, 28, "Venn diagram", 20, 900);
+      html += `<rect x="55" y="52" width="410" height="220" rx="4" fill="#fff" stroke="#111827" stroke-width="2.4"/>`;
+      html += `<circle cx="220" cy="155" r="92" fill="#dbeafe" fill-opacity="0.56" stroke="#111827" stroke-width="2.4"/>`;
+      html += `<circle cx="300" cy="155" r="92" fill="#fef3c7" fill-opacity="0.56" stroke="#111827" stroke-width="2.4"/>`;
+      html += svgText(155, 74, "multiples of 2", 14, 800, "start");
+      html += svgText(310, 74, "multiples of 3", 14, 800, "start");
+      html += svgText(260, 162, "X", 24, 900);
+      html += svgText(260, 294, "X is the overlap", 13, 800);
+      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Venn diagram with two overlapping circles labelled multiples of 2 and multiples of 3">${html}</svg>`;
     }
-
     function svgThermometer(temp) {
       const w = 220, h = 260, x = 112, top = 38, bottom = 210, min = -10, max = 30;
       const y = bottom - (temp - min) / (max - min) * (bottom - top);
@@ -727,28 +804,37 @@
     }
 
     function svgLineGraph(labels, values, title = "Line graph") {
-      const w = 520, h = 270, left = 64, top = 42, chartW = 400, chartH = 160;
-      const minV = Math.min(...values), maxV = Math.max(...values);
-      const pad = Math.max(5, Math.ceil((maxV - minV) / 4));
-      const lo = Math.floor((minV - pad) / 5) * 5, hi = Math.ceil((maxV + pad) / 5) * 5;
+      const w = 640, h = 360, left = 80, top = 48, chartW = 500, chartH = 230;
+      const maxV = Math.max(...values.map(Number), 1);
+      const axisMax = niceAxisMax(maxV);
+      const major = axisMajorStep(axisMax);
+      const minor = axisMax <= 20 ? 1 : axisMax <= 50 ? 5 : 10;
       const xFor = i => left + i * (chartW / (values.length - 1));
-      const yFor = v => top + chartH - (v - lo) / (hi - lo) * chartH;
-      let html = svgText(w/2, 25, title, 18, 900);
-      html += `<line x1="${left}" y1="${top}" x2="${left}" y2="${top+chartH}" stroke="#16324f" stroke-width="3"/><line x1="${left}" y1="${top+chartH}" x2="${left+chartW}" y2="${top+chartH}" stroke="#16324f" stroke-width="3"/>`;
-      for (let i = 0; i <= 4; i++) {
-        const v = lo + i * (hi - lo) / 4;
+      const yFor = v => top + chartH - (Number(v) / axisMax) * chartH;
+      let html = svgText(w/2, 25, title, 19, 900);
+      for (let v = 0; v <= axisMax; v += minor) {
         const y = yFor(v);
-        html += `<line x1="${left-5}" y1="${y}" x2="${left+chartW}" y2="${y}" stroke="#d8e4f5"/>`;
-        html += svgText(left-12, y+4, fmt(v), 11, 800, "end");
+        const isMajor = v % major === 0;
+        html += `<line x1="${left}" y1="${y}" x2="${left+chartW}" y2="${y}" stroke="${isMajor ? '#c7d2df' : '#edf2f7'}" stroke-width="${isMajor ? 1.2 : .7}"/>`;
       }
-      const points = values.map((v,i) => `${xFor(i)},${yFor(v)}`).join(" ");
-      html += `<polyline points="${points}" fill="none" stroke="#16324f" stroke-width="3"/>`;
-      values.forEach((v, i) => {
-        html += `<circle cx="${xFor(i)}" cy="${yFor(v)}" r="5" fill="#ff7a00" stroke="#16324f" stroke-width="1.5"/>`;
-        html += svgText(xFor(i), top+chartH+22, labels[i], 11, 800);
+      html += `<line x1="${left}" y1="${top}" x2="${left}" y2="${top+chartH}" stroke="#111827" stroke-width="3"/>`;
+      html += `<line x1="${left}" y1="${top+chartH}" x2="${left+chartW}" y2="${top+chartH}" stroke="#111827" stroke-width="3"/>`;
+      for (let v = 0; v <= axisMax; v += major) {
+        const y = yFor(v);
+        html += `<line x1="${left-7}" y1="${y}" x2="${left}" y2="${y}" stroke="#111827" stroke-width="2"/>`;
+        html += svgText(left-12, y+5, v, 13, 800, "end");
+      }
+      labels.forEach((lab, i) => {
+        const x = xFor(i);
+        html += `<line x1="${x}" y1="${top+chartH}" x2="${x}" y2="${top+chartH+7}" stroke="#111827" stroke-width="2"/>`;
+        html += svgText(x, top+chartH+28, lab, 13, 800);
       });
-      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Line graph">${html}</svg>`;
+      const points = values.map((v,i) => `${xFor(i)},${yFor(v)}`).join(" ");
+      html += `<polyline points="${points}" fill="none" stroke="#111827" stroke-width="3.2"/>`;
+      values.forEach((v, i) => html += `<circle cx="${xFor(i)}" cy="${yFor(v)}" r="5.5" fill="#fff" stroke="#111827" stroke-width="2.4"/>`);
+      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Line graph with a clear scale from 0 to ${axisMax}">${html}</svg>`;
     }
+
 
     function svgCoordinateRectangle(A, C, title = "Coordinate grid") {
       const w = 360, h = 330, left = 42, top = 32, step = 42;
@@ -1050,9 +1136,9 @@
       });
 
       addFamily("percentRatio", "Percentage of an amount", (d) => {
-        const percents = [10, 20, 25, 50, 75, 5, 15, 12.5, 37.5].slice(0, d + 4);
+        const percents = [10, 20, 25, 50, 75, 5, 15].slice(0, d + 4);
         const p = pick(percents);
-        let amount = rint(4, 24 + d*5) * (p === 12.5 || p === 37.5 ? 8 : 4);
+        let amount = rint(4, 24 + d*5) * (p === 25 || p === 75 ? 4 : p === 5 || p === 15 ? 20 : 10);
         const ans = amount * p / 100;
         return qBase("percentRatio", "Percentage of an amount", d, "short", `What is ${p}% of ${amount}?`, ans, {
           hint: "Find a friendly percentage first, such as 10%, 25% or 50%.",
@@ -1174,8 +1260,8 @@
       });
 
       addFamily("word", "Journey problems", (d) => {
-        const speed = rint(20, 60 + d*10);
-        const time = pick([0.5, 1, 1.5, 2, 2.5, 3].slice(0, d+2));
+        const speed = rint(10, 35 + d*5) * 2;
+        const time = pick([1, 2, 3].slice(0, Math.min(3, d+1)));
         const ans = speed * time;
         return qBase("word", "Journey problems", d, "short", `A train travels at ${speed} km per hour for ${fmt(time)} hours. How far does it travel?`, ans, {
           hint: "Distance = speed × time.",
@@ -1234,7 +1320,8 @@
       addFamily("shape", "Area of rectangles and triangles", (d) => {
         const isTri = d >= 3 && Math.random() > .45;
         if (isTri) {
-          const base = rint(6, 18 + d*3), height = rint(4, 14 + d*2);
+          let base = rint(6, 18 + d*3), height = rint(4, 14 + d*2);
+          if ((base * height) % 2 !== 0) height += 1;
           const ans = base * height / 2;
           return qBase("shape", "Triangle area", d, "short", `What is the area of this triangle?`, ans, {
             diagram: svgTriangle(base, height),
@@ -1306,7 +1393,7 @@
             explanation: `180° − ${a}° = ${ans}°.`
           });
         }
-        const angles = [rint(35,80), rint(45,95), rint(50,100), rint(45,90)];
+        const angles = [rint(35,70), rint(45,75), rint(50,80), rint(45,70)];
         const ans = 360 - angles.reduce((a,b)=>a+b,0);
         return qBase("shape", "Angles around a point", d, "short", `Find the missing angle around the point.`, ans, {
           diagram: svgAngle("around", angles),
@@ -1431,7 +1518,7 @@
       });
 
       addFamily("probability", "Spinner probability", (d) => {
-        const red = rint(1, 4 + d), blue = rint(1, 4 + d), green = rint(1, 3 + Math.floor(d/2));
+        const red = rint(1, 4), blue = rint(1, 4), green = rint(1, 4);
         const total = red + blue + green;
         const colour = pick([["red", red], ["blue", blue], ["green", green]]);
         const ans = simplify(colour[1], total);
@@ -1520,7 +1607,7 @@
 
       addFamily("data", "Bar charts", (d) => {
         const labels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-        const values = labels.map(() => rint(4, 18 + d*5));
+        const values = labels.map(() => easyCountValue(4, Math.min(20, 18 + d*5), 2));
         const day = rint(0, labels.length - 1);
         return qBase("data", "Bar charts", d, "short", `The bar chart shows books borrowed from a library. How many books were borrowed on ${labels[day]}?`, values[day], {
           diagram: svgBarChart(labels, values, "Books borrowed"),
@@ -1531,7 +1618,7 @@
 
       addFamily("data", "Pie charts", (d) => {
         const labels = ["Cycling", "Walking", "Bus", "Car"];
-        const values = [rint(5,15+d*3), rint(5,15+d*3), rint(5,15+d*3), rint(5,15+d*3)];
+        const values = simplePieValues();
         const total = values.reduce((a,b)=>a+b,0);
         const idx = rint(0, labels.length-1);
         const ans = simplify(values[idx], total);
@@ -1604,11 +1691,11 @@
       });
 
       addFamily("number", "Venn diagram reasoning", (d) => {
-        const limit = 9 + d * 3;
-        const countX = Array.from({length: limit}, (_, i) => i+1).filter(n => n % 2 === 0 && n % 3 === 0 && ![2,3,5,7,11,13,17,19,23,29,31].includes(n)).length;
+        const limit = pick([12, 18, 24]);
+        const countX = Array.from({length: limit}, (_, i) => i+1).filter(n => n % 6 === 0).length;
         return qBase("number", "Venn diagram reasoning", d, "short", `The numbers 1 to ${limit} are placed on the Venn diagram. How many numbers belong in region X?`, countX, {
           diagram: svgVennDiagram(),
-          hint: "Region X is in the multiples of 2 circle and the multiples of 3 circle, but not in the prime numbers circle.",
+          hint: "Region X is the overlap, so count numbers that are multiples of both 2 and 3.",
           explanation: `Region X contains multiples of 6 up to ${limit}, so there are ${countX}.`
         });
       });
@@ -1811,8 +1898,9 @@
       });
 
       addFamily("word", "Function machines", (d) => {
-        const mult = rint(2, 5 + d), add = rint(3, 12 + d*2), div = pick([2,3,4]);
+        const mult = rint(2, 5 + d), div = pick([2,3,4]);
         const input = rint(3, 20 + d*4) * div;
+        const add = div * rint(2, 8 + d);
         const output = (input * mult + add) / div;
         const askInput = d >= 3 && Math.random() > .45;
         if (askInput) {
@@ -1830,7 +1918,7 @@
       });
 
       addFamily("shape", "Isosceles triangle angles", (d) => {
-        const top = rint(24, 80);
+        const top = rint(12, 40) * 2;
         const base = (180 - top) / 2;
         return qBase("shape", "Isosceles triangle angles", d, "short", `An isosceles triangle has a top angle of ${top}°. What is each base angle?`, Math.round(base*10)/10, {
           tolerance: 0.01,
@@ -1967,7 +2055,7 @@
       });
 
       addFamily("probability", "Spinner probability language", (d) => {
-        const red = rint(1, 5 + d), blue = rint(1, 5 + d);
+        const red = rint(1, 5), blue = rint(1, 5);
         const total = red + blue;
         const ans = red === blue ? "even chance" : red > blue ? "likely" : "unlikely";
         return qBase("probability", "Spinner probability language", d, "mc", `The spinner is split into ${total} equal sections. Which word best describes landing on red?`, ans, {
@@ -1980,7 +2068,7 @@
       });
 
       addFamily("probability", "Probability complements", (d) => {
-        const red = rint(2, 8 + d), blue = rint(2, 8 + d), green = rint(1, 6 + d);
+        const red = rint(2, 5), blue = rint(2, 5), green = rint(1, 4);
         const total = red + blue + green;
         const ans = simplify(total - green, total);
         return qBase("probability", "Probability complements", d, "short", `A spinner has ${red} red sections, ${blue} blue sections and ${green} green sections. What is the probability it does not land on green?`, ans, {
@@ -1993,8 +2081,8 @@
 
       addFamily("data", "Bar chart totals and means", (d) => {
         const labels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-        const values = labels.map(() => rint(5, 20 + d*4));
-        const ask = pick(["total", "mean"]);
+        const values = labels.map(() => easyCountValue(4, Math.min(20, 20 + d*4), 2));
+        const ask = pick(["total", "total", "mean"]);
         const total = values.reduce((a,b)=>a+b,0);
         const ans = ask === "total" ? total : Math.round(total / values.length * 100) / 100;
         return qBase("data", "Bar chart totals and means", d, "short", `The bar chart shows visitors to a museum from Monday to Friday. What is the ${ask} number of visitors?`, ans, {
@@ -2007,7 +2095,7 @@
 
       addFamily("data", "Line graph reading", (d) => {
         const labels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-        const values = [rint(20, 35), rint(20, 40), rint(25, 45), rint(20, 45), rint(25, 50)];
+        const values = [easyGraphValue(20,35), easyGraphValue(20,40), easyGraphValue(25,45), easyGraphValue(20,45), easyGraphValue(25,50)];
         const idx = rint(0, labels.length-1);
         return qBase("data", "Line graph reading", d, "short", `The line graph shows a price in pounds. What is the price on ${labels[idx]}?`, values[idx], {
           diagram: svgLineGraph(labels, values, "Price during the week"),
@@ -2209,22 +2297,16 @@
       }, 8);
 
       addFamily("number", "Venn diagram sets", (d) => {
-        const set = Array.from({length: 9 + d}, (_,i)=>i+1);
-        const multiples2 = set.filter(n => n % 2 === 0).length;
-        const multiples3 = set.filter(n => n % 3 === 0);
-        const both = set.filter(n => n % 2 === 0 && n % 3 === 0);
-        const primesOnly = set.filter(n => isPrime(n) && n % 2 !== 0 && n % 3 !== 0);
-        const task = pick(["m2", "m3", "both", "primeOnly"]);
+        const limit = pick([12, 18, 24]);
+        const nums = Array.from({length: limit}, (_,i)=>i+1);
+        const task = pick(["m2", "m3", "both"]);
         let prompt, ans, exp;
-        if (task === "m2") { prompt = `Using numbers 1 to ${9+d}, how many belong in the multiples of 2 circle?`; ans = multiples2; exp = `The multiples of 2 are counted from 1 to ${9+d}.`; }
-        else if (task === "m3") { prompt = `List the numbers from 1 to ${9+d} that belong in the multiples of 3 circle.`; ans = multiples3.join(", "); exp = `The multiples of 3 are ${ans}.`; }
-        else if (task === "both") { prompt = `Which numbers from 1 to ${9+d} belong in the overlap of multiples of 2 and multiples of 3?`; ans = both.join(", "); exp = `The overlap contains multiples of 6: ${ans}.`; }
-        else { prompt = `Which prime numbers from 1 to ${9+d} are not multiples of 2 or 3?`; ans = primesOnly.join(", ") || "none"; exp = `Those primes are ${ans}.`; }
+        if (task === "m2") { prompt = `Numbers 1 to ${limit} are placed in the Venn diagram. How many belong in the multiples of 2 circle?`; ans = nums.filter(n => n % 2 === 0).length; exp = `There are ${ans} even numbers from 1 to ${limit}.`; }
+        else if (task === "m3") { prompt = `Numbers 1 to ${limit} are placed in the Venn diagram. How many belong in the multiples of 3 circle?`; ans = nums.filter(n => n % 3 === 0).length; exp = `There are ${ans} multiples of 3 from 1 to ${limit}.`; }
+        else { prompt = `Numbers 1 to ${limit} are placed in the Venn diagram. How many belong in region X?`; ans = nums.filter(n => n % 6 === 0).length; exp = `Region X is the overlap, so count multiples of 6. There are ${ans}.`; }
         return qBase("number", "Venn diagram sets", d, "short", prompt, ans, {
-          answerType: typeof ans === "number" ? "number" : "text",
           diagram: svgVennDiagram(),
-          accept: typeof ans === "string" ? [ans, ans.replace(/, /g," ")] : undefined,
-          hint: "Place each number by checking the set labels one at a time.",
+          hint: "Use the set labels. The overlap contains numbers that fit both circles.",
           explanation: exp
         });
       }, 8);
@@ -2286,14 +2368,10 @@
         const den = pick([3,4,5,6,8]);
         const w1 = rint(1, 3+d), w2 = rint(1, 2+d), n1 = rint(1, den-1), n2 = rint(1, den-1);
         const add = Math.random() < 0.55;
-        const firstTotal = w1 * den + n1;
-        let secondTotal = w2 * den + n2;
-        if (!add && secondTotal >= firstTotal) secondTotal = rint(1, firstTotal - 1);
-        const secondWhole = Math.floor(secondTotal / den);
-        const secondRemainder = secondTotal % den;
-        const secondText = secondRemainder === 0 ? String(secondWhole) : (secondWhole ? `${secondWhole} ${secondRemainder}/${den}` : `${secondRemainder}/${den}`);
-        const num = add ? firstTotal + secondTotal : firstTotal - secondTotal;
+        let num = add ? (w1*den+n1) + (w2*den+n2) : (w1*den+n1) - Math.min(w1*den+n1-1, w2*den+n2);
+        if (num <= 0) num = Math.abs(num) + den;
         const ans = simplify(num, den);
+        const secondText = add ? `${w2} ${n2}/${den}` : `${w2} ${n2}/${den}`;
         return qBase("fractions", "Mixed number operations", d, "short", `Work out ${w1} ${n1}/${den} ${add ? "+" : "−"} ${secondText}. Give your answer as an improper or simplified fraction.`, ans, {
           answerType: "fraction",
           hint: "Change mixed numbers into improper fractions first.",
@@ -2399,8 +2477,8 @@
 
       addFamily("percentRatio", "Currency line graphs", (d) => {
         const labels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-        const start = rint(24, 36);
-        const values = [start, start + rint(-3,3), start + rint(3,8), start + rint(-2,4), start + rint(5,10)].map(v => Math.max(10, v));
+        const start = easyGraphValue(25, 35);
+        const values = [start, start + pick([-5,0,5]), start + pick([5,10]), start + pick([-5,0,5]), start + pick([10,15])].map(v => Math.max(10, Math.min(60, v)));
         const day = rint(0, 4), qty = rint(3, 9 + d);
         const ans = values[day] * qty;
         return qBase("percentRatio", "Currency line graphs", d, "short", `The line graph shows the price of one token in pence. What is the cost of ${qty} tokens on ${labels[day]}?`, ans, {
@@ -2746,7 +2824,7 @@
       }, 10);
 
       addFamily("probability", "Probability scale with sections", (d) => {
-        const items = [[0,"impossible"],[0.125,"unlikely"],[0.25,"unlikely"],[0.5,"even chance"],[0.75,"likely"],[0.875,"likely"],[1,"certain"]];
+        const items = [[0,"impossible"],[0.25,"unlikely"],[0.5,"even chance"],[0.75,"likely"],[1,"certain"]];
         const [pos, ans] = pick(items);
         return qBase("probability", "Probability scale with sections", d, "mc", `Which probability word best describes the arrow?`, ans, {
           answerType: "text",
@@ -2772,7 +2850,7 @@
 
       addFamily("data", "Bar chart statements", (d) => {
         const labels = ["A", "B", "C", "D", "E"];
-        const values = labels.map(()=>rint(2, 8+d));
+        const values = labels.map(()=>easyGraphValue(2, 12, 1));
         const total = values.reduce((a,b)=>a+b,0);
         const maxIdx = values.indexOf(Math.max(...values));
         const ans = `${labels[maxIdx]} has the greatest value.`;
@@ -2802,7 +2880,7 @@
 
       addFamily("data", "Line graph readings", (d) => {
         const labels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-        const values = [rint(20,35), rint(20,35), rint(30,45), rint(20,40), rint(30,50)];
+        const values = [easyGraphValue(20,35), easyGraphValue(20,35), easyGraphValue(30,45), easyGraphValue(20,40), easyGraphValue(30,50)];
         const day = rint(0,4), amount = rint(2, 8+d);
         const ans = values[day] * amount;
         return qBase("data", "Line graph readings", d, "short", `Use the line graph. If one item costs the value shown on ${labels[day]}, what do ${amount} items cost?`, ans, {
@@ -3270,7 +3348,7 @@
 
       addFamily("data", "Bar chart totals and means", (d) => {
         const labels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-        const values = labels.map(() => rint(4, 18 + d));
+        const values = labels.map(() => easyGraphValue(4, 20, 2));
         const task = pick(["total", "mean", "difference"]);
         let ans, prompt;
         if (task === "total") { ans = values.reduce((a,b)=>a+b,0); prompt = "Use the bar chart. What is the total for all five days?"; }
@@ -3286,7 +3364,7 @@
 
       addFamily("data", "Line graph price readings", (d) => {
         const labels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-        const values = [rint(20, 35), rint(20, 40), rint(30, 50), rint(25, 45), rint(35, 55)];
+        const values = [easyGraphValue(20,35), easyGraphValue(20,40), easyGraphValue(30,50), easyGraphValue(25,45), easyGraphValue(35,55)];
         const day = rint(0, 4);
         const amount = rint(2, 7 + d);
         const ans = values[day] * amount;
@@ -3439,18 +3517,16 @@
       }, 10);
 
       addFamily("number", "Exam Venn set reasoning", (d) => {
-        const limit = 9 + d * 3;
+        const limit = pick([12, 18, 24]);
         const nums = Array.from({length:limit}, (_,i)=>i+1);
-        const task = pick(["multiples2", "multiples3", "overlap", "primeOnly", "outside"]);
-        let ans, prompt, exp, type = "number";
-        if (task === "multiples2") { ans = nums.filter(n=>n%2===0).length; prompt = `Numbers 1 to ${limit} are placed in the Venn diagram. How many are multiples of 2?`; exp = `Count the even numbers up to ${limit}.`; }
-        else if (task === "multiples3") { const list = nums.filter(n=>n%3===0); ans = list.join(", "); prompt = `List the numbers from 1 to ${limit} that are multiples of 3.`; exp = `The multiples of 3 are ${ans}.`; type="text"; }
-        else if (task === "overlap") { const list = nums.filter(n=>n%2===0 && n%3===0); ans = list.join(", "); prompt = `Which numbers go in the overlap of multiples of 2 and multiples of 3?`; exp = `These are multiples of 6: ${ans}.`; type="text"; }
-        else if (task === "primeOnly") { const list = nums.filter(n=>isPrime(n) && n%2!==0 && n%3!==0); ans = list.join(", ") || "none"; prompt = `Which prime numbers are not multiples of 2 or 3?`; exp = `The answer is ${ans}.`; type="text"; }
-        else { const list = nums.filter(n=>n%2!==0 && n%3!==0 && !isPrime(n)); ans = list.join(", ") || "none"; prompt = `Which numbers go outside all three circles?`; exp = `Outside means not a multiple of 2, not a multiple of 3 and not prime: ${ans}.`; type="text"; }
+        const task = pick(["multiples2", "multiples3", "overlap"]);
+        let ans, prompt, exp;
+        if (task === "multiples2") { ans = nums.filter(n=>n%2===0).length; prompt = `Numbers 1 to ${limit} are placed in the Venn diagram. How many are multiples of 2?`; exp = `Count the even numbers up to ${limit}. There are ${ans}.`; }
+        else if (task === "multiples3") { ans = nums.filter(n=>n%3===0).length; prompt = `Numbers 1 to ${limit} are placed in the Venn diagram. How many are multiples of 3?`; exp = `Count multiples of 3 up to ${limit}. There are ${ans}.`; }
+        else { ans = nums.filter(n=>n%6===0).length; prompt = `Numbers 1 to ${limit} are placed in the Venn diagram. How many numbers go in region X?`; exp = `Region X is the overlap, so count multiples of 6. There are ${ans}.`; }
         return qBase("number", "Exam Venn set reasoning", d, "short", prompt, ans, {
-          answerType:type, diagram: svgVennDiagram(), accept: type==="text" ? [ans, String(ans).replace(/, /g," ")] : undefined,
-          hint: "Check each set label one at a time.", explanation: exp
+          diagram: svgVennDiagram(),
+          hint: "Use the set labels and count only the numbers that fit the region asked about.", explanation: exp
         });
       }, 10);
 
@@ -3748,12 +3824,12 @@
       }, 10);
 
       addFamily("probability", "Exam complements", (d) => {
-        const red = rint(2,8+d), blue = rint(2,8+d), yellow = rint(1,6+d), total = red+blue+yellow, ans = simplify(blue+yellow,total);
+        const red = rint(2,6), blue = rint(2,6), yellow = rint(1,5), total = red+blue+yellow, ans = simplify(blue+yellow,total);
         return qBase("probability", "Exam complements", d, "short", `A bag has ${red} red counters, ${blue} blue counters and ${yellow} yellow counters. What is the probability of not picking red?`, ans, {answerType:"fraction", hint:"Not red means blue or yellow.", explanation:`There are ${blue+yellow} not-red counters out of ${total}, so the answer is ${fracText(ans)}.`});
       }, 10);
 
       addFamily("data", "Exam bar chart reading", (d) => {
-        const labels = ["Mon","Tue","Wed","Thu","Fri"], values = labels.map(()=>rint(5,20+d*4));
+        const labels = ["Mon","Tue","Wed","Thu","Fri"], values = labels.map(()=>easyGraphValue(6,20,2));
         const ask = pick(["total","mean","day"]);
         if (ask === "day") { const i = rint(0,4); return qBase("data", "Exam bar chart reading", d, "short", `How many books were borrowed on ${labels[i]}?`, values[i], {diagram:svgBarChart(labels,values,"Books borrowed"), hint:"Read the bar height using the scale.", explanation:`The ${labels[i]} bar shows ${values[i]}.`}); }
         const total = values.reduce((a,b)=>a+b,0), ans = ask==="total" ? total : Math.round(total/5*10)/10;
@@ -3761,20 +3837,20 @@
       }, 10);
 
       addFamily("data", "Exam grouped chart statements", (d) => {
-        const groups = ["110–119","120–129","130–139","140–149","150–159"], values = [rint(1,5),rint(2,7),rint(4,9),rint(2,7),rint(1,4)];
+        const groups = ["110–119","120–129","130–139","140–149","150–159"], values = [2,4,8,6,2].map(v => Math.max(1, v + pick([-1,0,1])));
         const under140 = values[0]+values[1]+values[2];
         const ans = `${under140} children are under 140 cm tall.`;
         return qBase("data", "Exam grouped chart statements", d, "mc", `Which statement must be true from the grouped bar chart?`, ans, {answerType:"text", diagram:svgBarChart(groups,values,"Heights in cm"), choices:textOptions([ans,`1 child is exactly 165 cm tall.`,`${values[3]} children are exactly 145 cm tall.`,`No child is shorter than 120 cm.`,`${values[4]+1} children are between 150 and 159 cm.`]), hint:"Grouped charts show intervals, not exact heights.", explanation:`Adding the first three groups gives ${under140} children under 140 cm.`});
       }, 10);
 
       addFamily("data", "Exam line graph costs", (d) => {
-        const labels = ["Mon","Tue","Wed","Thu","Fri"], values = labels.map(()=>rint(20,45+d*3));
+        const labels = ["Mon","Tue","Wed","Thu","Fri"], values = labels.map(()=>easyGraphValue(20, Math.min(60,45+d*3)));
         const day = rint(0,4), qty = rint(3,9+d), ans = values[day]*qty;
         return qBase("data", "Exam line graph costs", d, "short", `The line graph shows the price of one token in pence. What is the cost of ${qty} tokens on ${labels[day]}?`, ans, {diagram:svgLineGraph(labels,values,"Token price (pence)"), hint:"Read the day's price, then multiply.", explanation:`${values[day]}p × ${qty} = ${ans}p.`});
       }, 10);
 
       addFamily("data", "Exam pie chart fractions", (d) => {
-        const labels = ["Cycling","Walking","Bus","Car"], values = labels.map(()=>rint(5,18+d*2));
+        const labels = ["Cycling","Walking","Bus","Car"], values = simplePieValues();
         const total = values.reduce((a,b)=>a+b,0), i = rint(0,3), ans = simplify(values[i], total);
         return qBase("data", "Exam pie chart fractions", d, "short", `What fraction of pupils chose ${labels[i]}?`, ans, {answerType:"fraction", diagram:svgPieChart(labels,values,"Travel to school"), hint:"Use the key value over the total.", explanation:`${labels[i]} is ${values[i]} out of ${total}, so the fraction is ${fracText(ans)}.`});
       }, 10);
@@ -3805,7 +3881,7 @@
       }, 10);
 
       addFamily("data", "Exam conversion graph rules", (d) => {
-        const rate = pick([1.25,1.5,2,2.5]), input = rint(8,42+d*8), ans = Math.round(input*rate*100)/100;
+        const rate = pick([2,3,4,5]), input = rint(4,30+d*4), ans = input*rate;
         return qBase("data", "Exam conversion graph rules", d, "short", `A conversion line uses the rule output = input × ${rate}. What is the output when the input is ${input}?`, ans, {hint:"Multiply by the conversion rate.", explanation:`${input} × ${rate} = ${fmt(ans)}.`});
       }, 10);
     }
@@ -3827,7 +3903,7 @@
     const examEls = {
       startScreen: document.getElementById("startScreen"), examScreen: document.getElementById("examScreen"), resultsScreen: document.getElementById("resultsScreen"),
       bankInfo: document.getElementById("bankInfo"), startExamBtn: document.getElementById("startExamBtn"), demoExamBtn: document.getElementById("demoExamBtn"),
-      timerDisplay: document.getElementById("timerDisplay"), questionNumber: document.getElementById("questionNumber"), markText: document.getElementById("markText"), tagRow: document.getElementById("tagRow"), questionText: document.getElementById("questionText"), diagramWrap: document.getElementById("diagramWrap"), choicesWrap: document.getElementById("choicesWrap"), shortAnswerWrap: document.getElementById("shortAnswerWrap"), shortAnswerInput: document.getElementById("shortAnswerInput"), reviewFeedback: document.getElementById("reviewFeedback"), prevBtn: document.getElementById("prevBtn"), nextBtn: document.getElementById("nextBtn"), markReviewBtn: document.getElementById("markReviewBtn"), finishBtn: document.getElementById("finishBtn"), summaryBtn: document.getElementById("summaryBtn"), answeredCount: document.getElementById("answeredCount"), answerGrid: document.getElementById("answerGrid"), examLegend: document.getElementById("examLegend"), scoreLarge: document.getElementById("scoreLarge"), percentageLarge: document.getElementById("percentageLarge"), resultMessage: document.getElementById("resultMessage"), heatmap: document.getElementById("heatmap"), reviewBtn: document.getElementById("reviewBtn"), downloadPdfBtn: document.getElementById("downloadPdfBtn"), newPaperBtn: document.getElementById("newPaperBtn"), questionReviewList: document.getElementById("questionReviewList")
+      timerDisplay: document.getElementById("timerDisplay"), questionNumber: document.getElementById("questionNumber"), markText: document.getElementById("markText"), tagRow: document.getElementById("tagRow"), questionText: document.getElementById("questionText"), diagramWrap: document.getElementById("diagramWrap"), choicesWrap: document.getElementById("choicesWrap"), shortAnswerWrap: document.getElementById("shortAnswerWrap"), standardAnswerGroup: document.getElementById("standardAnswerGroup"), fractionAnswerGroup: document.getElementById("fractionAnswerGroup"), shortAnswerInput: document.getElementById("shortAnswerInput"), fractionNumeratorInput: document.getElementById("fractionNumeratorInput"), fractionDenominatorInput: document.getElementById("fractionDenominatorInput"), reviewFeedback: document.getElementById("reviewFeedback"), prevBtn: document.getElementById("prevBtn"), nextBtn: document.getElementById("nextBtn"), markReviewBtn: document.getElementById("markReviewBtn"), finishBtn: document.getElementById("finishBtn"), summaryBtn: document.getElementById("summaryBtn"), answeredCount: document.getElementById("answeredCount"), answerGrid: document.getElementById("answerGrid"), examLegend: document.getElementById("examLegend"), scoreLarge: document.getElementById("scoreLarge"), percentageLarge: document.getElementById("percentageLarge"), resultMessage: document.getElementById("resultMessage"), heatmap: document.getElementById("heatmap"), reviewBtn: document.getElementById("reviewBtn"), downloadPdfBtn: document.getElementById("downloadPdfBtn"), newPaperBtn: document.getElementById("newPaperBtn"), questionReviewList: document.getElementById("questionReviewList")
     };
     let examState = { questions: [], responses: [], reviewMarks: [], currentIndex: 0, startedAt: null, secondsAllowed: EXAM_MINUTES * 60, timerId: null, submitted: false, reviewMode: false, demo: false, score: 0, percentage: 0, completedAt: null };
 
@@ -3856,208 +3932,55 @@
       q.examNumber = number;
       if (q.kind === "mc") {
         q.choices = (q.choices || []).map(c => typeof c === "object" && c && "value" in c ? c : { value: c, label: String(c) });
+        const type = q.answerType || "number";
+        const targetCount = clamp(q.choices.length || 4, 4, 5);
+        if (!q.choices.some(c => isCorrect(c.value, q))) q.choices.unshift({ value: q.answer, label: labelForValue(q.answer, type) });
         let guard = 0;
-        while (q.choices.length < 5 && guard < 80) {
+        while (q.choices.length < targetCount && guard < 80) {
           guard += 1;
-          if (q.answerType === "number" || q.answerType === "money") {
+          if (type === "number" || type === "money") {
             const base = Number(q.answer);
             const spread = Math.max(2, Math.round(Math.abs(base) * 0.08) + guard);
             addExamChoice(q, base + pick([-spread, spread, spread + 1, -spread - 1, 10, -10]));
-          } else if (q.answerType === "fraction") {
+          } else if (type === "fraction") {
             const f = simplify(q.answer.num || 1, q.answer.den || 2);
             addExamChoice(q, { num: Math.max(1, f.num + pick([-2,-1,1,2,3])), den: Math.max(2, f.den + pick([-2,-1,1,2,3])) });
           } else {
-            ["Cannot tell", "None of these", "All of these", "Both are equal", "Not enough information", "0"].forEach(v => q.choices.length < 5 && addExamChoice(q, v));
+            ["Cannot tell", "None of these", "All of these", "Both are equal", "Not enough information", "0"].forEach(v => q.choices.length < targetCount && addExamChoice(q, v));
           }
         }
-        const correctChoices = q.choices.filter(c => isCorrect(c.value, q));
-        if (correctChoices.length === 0) q.choices.unshift({ value: q.answer, label: q.answerType === "fraction" ? fracText(q.answer) : q.answerType === "money" ? money(q.answer) : String(q.answer) });
-        q.choices = shuffle(q.choices.slice(0, 5));
+        const correct = q.choices.find(c => isCorrect(c.value, q)) || { value:q.answer, label:labelForValue(q.answer, type) };
+        const seen = new Set([normalKey(correct.value, type)]);
+        const distractors = [];
+        q.choices.forEach(c => {
+          const key = normalKey(c.value, type);
+          if (!seen.has(key) && !isCorrect(c.value, q)) { seen.add(key); distractors.push(c); }
+        });
+        q.choices = shuffle([correct].concat(shuffle(distractors).slice(0, targetCount - 1)));
       }
       return q;
     }
-
-    const originalNormaliseExamQuestion = normaliseExamQuestion;
-    const FRIENDLY_FRACTION_DENOMS = new Set([2,3,4,5,6,8,10,12]);
-    function isWholeNumberValue(n) {
-      const x = Number(n);
-      return Number.isFinite(x) && Math.abs(x - Math.round(x)) < 1e-9;
-    }
-    function decimalPlacesOf(n) {
-      const s = String(Number(n));
-      if (s.includes("e-")) return Number(s.split("e-")[1] || 0);
-      return s.includes(".") ? s.split(".")[1].length : 0;
-    }
-    function friendlyFractionValue(v) {
-      const f = typeof v === "object" && v ? simplify(Number(v.num), Number(v.den)) : parseFraction(v);
-      if (!f || !Number.isFinite(Number(f.num)) || !Number.isFinite(Number(f.den)) || Number(f.den) === 0) return false;
-      if (Math.abs(f.den) === 1) return true;
-      return FRIENDLY_FRACTION_DENOMS.has(Math.abs(f.den)) && Math.abs(f.num) <= 40;
-    }
-    function promptText(q) { return String(q.prompt || "").replace(/<[^>]*>/g, " ").toLowerCase(); }
-    function simplifyFractionsInText(s) {
-      return String(s).replace(/\b(\d+)\/(\d+)\b/g, (m, a, b) => {
-        const den = Number(b), num = Number(a);
-        if (!den) return m;
-        const f = simplify(num, den);
-        return f.den === 1 ? String(f.num) : `${f.num}/${f.den}`;
-      });
-    }
-    function factorTarget(q) {
-      const m = promptText(q).match(/factor of\s+([0-9]+)/i);
-      return m ? Number(m[1]) : null;
-    }
-    function multipleTarget(q) {
-      const m = promptText(q).match(/multiple of\s+([0-9]+)/i);
-      return m ? Number(m[1]) : null;
-    }
-    function numericChoice(v) {
-      if (typeof v === "object") return NaN;
-      const s = String(v).replace(/[£,$,%]/g, "").trim();
-      const m = s.match(/-?\d+(?:\.\d+)?/);
-      return m ? Number(m[0]) : NaN;
-    }
-    function semanticCorrectForPrompt(q, value) {
-      const p = promptText(q);
-      const n = numericChoice(value);
-      if (!Number.isFinite(n)) return false;
-      const ft = factorTarget(q);
-      if (ft && /which(?: one)?(?: number)?[^?]*factor of/.test(p)) return isWholeNumberValue(n) && n !== 0 && ft % n === 0;
-      const mt = multipleTarget(q);
-      if (mt && /which(?: one)?(?: number)?[^?]*multiple of/.test(p)) return isWholeNumberValue(n) && n % mt === 0;
-      if (/which(?: of these)?[^?]*square number/.test(p)) return isWholeNumberValue(n) && isSquare(n);
-      if (/which(?: of these)?[^?]*prime number/.test(p)) return isWholeNumberValue(n) && isPrime(n);
-      return false;
-    }
-    function semanticConflict(q, value) {
-      return semanticCorrectForPrompt(q, value) && !isCorrect(value, q);
-    }
-    function friendlyChoiceValue(q, value) {
-      const type = q.answerType || "number";
-      if (type === "fraction") return friendlyFractionValue(value);
-      if (type === "money") return Number.isFinite(Number(value)) && isWholeNumberValue(Number(value) * 100);
-      if (type === "number") {
-        const x = Number(value);
-        if (!Number.isFinite(x)) return false;
-        return isWholeNumberValue(x) || decimalPlacesOf(x) <= 3;
+    function isElevenPlusAppropriate(q) {
+      if (!q || !q.prompt) return false;
+      if (q.answerType === "number" && q.kind !== "mc" && typeof q.answer === "number") {
+        if (!Number.isInteger(q.answer)) return false;
       }
+      if (q.answerType === "money" && typeof q.answer === "number") {
+        if (!Number.isFinite(q.answer) || Math.abs(Math.round(q.answer * 100) - q.answer * 100) > 0.0001) return false;
+      }
+      if (q.answerType === "fraction" && q.answer && typeof q.answer === "object") {
+        const f = simplify(q.answer.num, q.answer.den);
+        if (Math.abs(f.den) > 20) return false;
+      }
+      const spinner = String(q.diagram || "").match(/Spinner diagram with (\d+) equal sections/i);
+      if (spinner && Number(spinner[1]) > 12) return false;
       return true;
     }
-    function friendlyQuestionAnswer(q) {
-      const type = q.answerType || "number";
-      if (type === "fraction") return friendlyFractionValue(q.answer);
-      if (type === "money") return Number.isFinite(Number(q.answer)) && isWholeNumberValue(Number(q.answer) * 100);
-      if (type === "number") {
-        const x = Number(q.answer);
-        if (!Number.isFinite(x)) return false;
-        if (q.kind !== "mc" && !isWholeNumberValue(x)) return false;
-        return isWholeNumberValue(x) || decimalPlacesOf(x) <= 3;
-      }
-      return q.answer !== undefined && q.answer !== null && String(q.answer).trim() !== "";
-    }
-    function safeLabel(q, value) {
-      if ((q.answerType || "number") === "fraction") return fracText(value);
-      if ((q.answerType || "number") === "money") return money(value);
-      if ((q.answerType || "number") === "number") return fmt(value);
-      return String(value);
-    }
-    function safeDistractor(q, guard) {
-      const type = q.answerType || "number";
-      const p = promptText(q);
-      const ft = factorTarget(q);
-      if (ft && /factor of/.test(p)) {
-        for (let i = 0; i < 80; i++) {
-          const candidate = 2 + ((guard * 7 + i * 3) % Math.max(12, ft + 18));
-          if (candidate !== Number(q.answer) && ft % candidate !== 0) return candidate;
-        }
-      }
-      const mt = multipleTarget(q);
-      if (mt && /multiple of/.test(p)) {
-        const candidate = Number(q.answer) + guard + 1;
-        return candidate % mt === 0 ? candidate + 1 : candidate;
-      }
-      if (/square number/.test(p)) {
-        let candidate = Math.max(2, Number(q.answer) + pick([-9,-7,-5,-3,2,3,5,7,11]) + guard);
-        while (isSquare(candidate) || candidate === Number(q.answer)) candidate += 1;
-        return candidate;
-      }
-      if (/prime number/.test(p)) {
-        let candidate = Math.max(4, Number(q.answer) + pick([-8,-6,-4,4,6,8,10]) + guard);
-        while (isPrime(candidate) || candidate === Number(q.answer)) candidate += 1;
-        return candidate;
-      }
-      if (type === "fraction") {
-        const base = simplify(q.answer.num || 1, q.answer.den || 2);
-        const denoms = [2,3,4,5,6,8,10,12];
-        const den = denoms[guard % denoms.length];
-        const raw = Math.max(1, Math.min(den - 1, (Math.abs(base.num) + guard) % den || 1));
-        return simplify(raw, den);
-      }
-      if (type === "money") {
-        const pence = Math.round(Number(q.answer) * 100);
-        const delta = [50,100,150,200,250,500,-50,-100,-150,-200][guard % 10];
-        return Math.max(0, pence + delta) / 100;
-      }
-      if (type === "number") {
-        const base = Number(q.answer);
-        const offsets = [-10,10,-5,5,-2,2,-1,1,12,-12,20,-20,3,-3,7,-7];
-        let candidate = base + offsets[guard % offsets.length] + Math.floor(guard / offsets.length);
-        if (isWholeNumberValue(base)) candidate = Math.round(candidate);
-        return candidate;
-      }
-      const generic = ["Cannot tell", "None of these", "All of these", "Both are equal", "Not enough information", "0", "1"];
-      return generic[guard % generic.length];
-    }
-    function cleanExamQuestionFor11Plus(q) {
-      if (!q || !q.prompt || !friendlyQuestionAnswer(q)) return null;
-      q.prompt = simplifyFractionsInText(q.prompt);
-      const p = promptText(q);
-      if (/recurring/.test(p)) return null;
-      if (/\b0\s+[a-z]+\s+counters\b/.test(p)) return null;
-      if (/17\s*(?:1\/2|½)|37\.5|12\.5/.test(p) && q.kind !== "mc") return null;
-      if (q.kind === "mc") {
-        const type = q.answerType || "number";
-        const clean = [];
-        const seen = new Set();
-        const add = value => {
-          if (!friendlyChoiceValue(q, value)) return false;
-          if (semanticConflict(q, value)) return false;
-          const key = normalKey(value, type);
-          if (seen.has(key)) return false;
-          seen.add(key);
-          clean.push({ value, label: safeLabel(q, value) });
-          return true;
-        };
-        add(q.answer);
-        (q.choices || []).forEach(c => {
-          const value = typeof c === "object" && c && "value" in c ? c.value : c;
-          if (!isCorrect(value, q)) add(value);
-        });
-        let guard = 0;
-        while (clean.length < 5 && guard < 320) {
-          add(safeDistractor(q, guard));
-          guard += 1;
-        }
-        if (clean.length < 4) return null;
-        q.choices = shuffle(clean.slice(0, 5));
-        const correctCount = q.choices.filter(c => isCorrect(c.value, q)).length;
-        if (correctCount !== 1) return null;
-        if (q.choices.some(c => semanticConflict(q, c.value))) return null;
-      }
-      return q;
-    }
-    normaliseExamQuestion = function(raw, entry, number) {
-      const q = originalNormaliseExamQuestion(raw, entry, number);
-      const cleaned = cleanExamQuestionFor11Plus(q);
-      if (!cleaned) throw new Error("Generated question did not meet whole-number/friendly 11+ constraints");
-      return cleaned;
-    };
-
     function generateFromEntry(entry, number) {
-      for (let attempt = 0; attempt < 6; attempt++) {
+      for (let attempt = 0; attempt < 24; attempt++) {
         try {
           const q = normaliseExamQuestion(entry.gen(entry.difficulty), entry, number);
-          if (q.prompt && q.answer !== undefined && q.answer !== null) return q;
+          if (q.prompt && q.answer !== undefined && q.answer !== null && isElevenPlusAppropriate(q)) return q;
         } catch (e) {}
       }
       return null;
@@ -4119,24 +4042,28 @@
     function responseHasAnswer(resp) {
       if (!resp) return false;
       if (resp.kind === "mc") return resp.choiceIndex !== undefined;
+      if (resp.kind === "fraction") return String(resp.num || "").trim().length > 0 && String(resp.den || "").trim().length > 0 && Number(resp.den) !== 0;
       return String(resp.text || "").trim().length > 0;
     }
     function userAnswerText(resp) {
       if (!resp) return "Unanswered";
       if (resp.kind === "mc") return resp.label || "Unanswered";
+      if (resp.kind === "fraction") return responseHasAnswer(resp) ? `${resp.num}/${resp.den}` : "Unanswered";
       return String(resp.text || "").trim() || "Unanswered";
     }
     function responseCorrect(q, resp) {
       if (!responseHasAnswer(resp)) return false;
-      return resp.kind === "mc" ? isCorrect(resp.value, q) : isCorrect(resp.text, q);
+      if (resp.kind === "mc") return isCorrect(resp.value, q);
+      if (resp.kind === "fraction") return isCorrect({num:Number(resp.num), den:Number(resp.den)}, q);
+      return isCorrect(resp.text, q);
     }
     function renderQuestion() {
       const q = examState.questions[examState.currentIndex];
       const resp = examState.responses[examState.currentIndex];
       examEls.questionNumber.textContent = `${examState.reviewMode ? "Review" : "Question"} ${examState.currentIndex + 1} of ${examState.questions.length}`;
       examEls.markText.textContent = "1 mark";
-      examEls.tagRow.innerHTML = `<span class="tag">${escapeHtml(TOPICS[q.topic].name)}</span><span class="tag">Level ${q.difficulty}</span>`;
-      examEls.questionText.innerHTML = q.prompt;
+      examEls.tagRow.innerHTML = `<span class="tag">${escapeHtml(TOPICS[q.topic].name)}</span>`;
+      examEls.questionText.innerHTML = mathifyText(q.prompt);
       examEls.diagramWrap.innerHTML = q.diagram || "";
       examEls.choicesWrap.innerHTML = "";
       examEls.shortAnswerWrap.classList.add("hidden");
@@ -4148,7 +4075,7 @@
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "choice";
-          btn.innerHTML = `<span class="letter">${letters[idx]}</span><span class="label">${escapeHtml(choice.label)}</span>`;
+          btn.innerHTML = `<span class="letter">${letters[idx]}</span><span class="label">${q.answerType === "fraction" && choice.value && typeof choice.value === "object" ? mathFracHtml(simplify(choice.value.num, choice.value.den).num, simplify(choice.value.num, choice.value.den).den) : mathifyText(choice.label)}</span>`;
           if (resp && resp.choiceIndex === idx) btn.classList.add("selected");
           if (examState.submitted) {
             btn.disabled = true;
@@ -4161,9 +4088,29 @@
         });
       } else {
         examEls.shortAnswerWrap.classList.remove("hidden");
-        examEls.shortAnswerInput.value = resp && resp.kind === "short" ? resp.text : "";
-        examEls.shortAnswerInput.oninput = () => { examState.responses[examState.currentIndex] = { kind:"short", text:examEls.shortAnswerInput.value }; updateAnswerGrid(); };
-        if (!examState.submitted) setTimeout(()=>examEls.shortAnswerInput.focus(),0);
+        const isFractionAnswer = q.answerType === "fraction";
+        examEls.standardAnswerGroup.classList.toggle("hidden", isFractionAnswer);
+        examEls.fractionAnswerGroup.classList.toggle("hidden", !isFractionAnswer);
+        examEls.shortAnswerInput.disabled = examState.submitted;
+        examEls.fractionNumeratorInput.disabled = examState.submitted;
+        examEls.fractionDenominatorInput.disabled = examState.submitted;
+        if (isFractionAnswer) {
+          examEls.fractionNumeratorInput.value = resp && resp.kind === "fraction" ? resp.num : "";
+          examEls.fractionDenominatorInput.value = resp && resp.kind === "fraction" ? resp.den : "";
+          const updateFraction = () => {
+            const num = examEls.fractionNumeratorInput.value.trim();
+            const den = examEls.fractionDenominatorInput.value.trim();
+            examState.responses[examState.currentIndex] = (num || den) ? { kind:"fraction", num, den, text:`${num}/${den}` } : null;
+            updateAnswerGrid();
+          };
+          examEls.fractionNumeratorInput.oninput = updateFraction;
+          examEls.fractionDenominatorInput.oninput = updateFraction;
+          if (!examState.submitted) setTimeout(()=>examEls.fractionNumeratorInput.focus(),0);
+        } else {
+          examEls.shortAnswerInput.value = resp && resp.kind === "short" ? resp.text : "";
+          examEls.shortAnswerInput.oninput = () => { examState.responses[examState.currentIndex] = { kind:"short", text:examEls.shortAnswerInput.value }; updateAnswerGrid(); };
+          if (!examState.submitted) setTimeout(()=>examEls.shortAnswerInput.focus(),0);
+        }
       }
       if (examState.submitted) renderReviewFeedback(q, resp);
       updateControls(); updateAnswerGrid();
@@ -4174,7 +4121,7 @@
       const given = userAnswerText(resp);
       const feedback = correct ? `Correct. ${q.explanation || "Good work."}` : `Your answer: ${given}. Correct answer: ${answer}. ${q.explanation || q.hint || "Try the calculation again step by step."}`;
       examEls.reviewFeedback.className = `review-feedback ${correct ? "good" : "bad"}`;
-      examEls.reviewFeedback.innerHTML = `<strong>${correct ? "Correct" : "Needs review"}</strong>${escapeHtml(feedback)}`;
+      examEls.reviewFeedback.innerHTML = `<strong>${correct ? "Correct" : "Needs review"}</strong>${mathifyText(feedback)}`;
     }
     function updateControls() {
       examEls.prevBtn.disabled = examState.currentIndex === 0;
@@ -4223,7 +4170,7 @@
         const s = stats[t], label = s.rag === "green" ? "Green: secure" : s.rag === "amber" ? "Amber: developing" : "Red: priority";
         return `<div class="heat-tile ${s.rag}"><div class="heat-title">${escapeHtml(s.name)}</div><div class="heat-status">${s.correct}/${s.total} correct · ${s.pct}% · ${label}</div><div class="heat-feedback">${escapeHtml(topicAdvice[t])}</div></div>`;
       }).join("");
-      const rows = examState.questions.map((q,i) => `<tr><td>${i+1}</td><td>${escapeHtml(TOPICS[q.topic].name)}</td><td>${responseCorrect(q, examState.responses[i]) ? "✓" : "✗"}</td><td>${escapeHtml(userAnswerText(examState.responses[i]))}</td><td>${escapeHtml(answerLabel(q))}</td></tr>`).join("");
+      const rows = examState.questions.map((q,i) => `<tr><td>${i+1}</td><td>${escapeHtml(TOPICS[q.topic].name)}</td><td>${responseCorrect(q, examState.responses[i]) ? "✓" : "✗"}</td><td>${mathifyText(userAnswerText(examState.responses[i]))}</td><td>${mathifyText(answerLabel(q))}</td></tr>`).join("");
       examEls.questionReviewList.innerHTML = `<table class="mini-table"><thead><tr><th>#</th><th>Topic</th><th>Mark</th><th>Your answer</th><th>Correct answer</th></tr></thead><tbody>${rows}</tbody></table>`;
     }
     function startReview() {
@@ -4305,8 +4252,12 @@
     buildBank();
     extendBankWithExamVariants();
     extendBankWithExtra300Variants();
+    const beforeExam500Count = BANK.length;
     extendBankWithExamPractice500Variants();
-    if (examEls.bankInfo) examEls.bankInfo.textContent = "";
+    const addedExam500 = BANK.length - beforeExam500Count;
+    examEls.bankInfo.textContent = "";
+    examEls.bankInfo.classList.add("hidden");
+    examEls.demoExamBtn.classList.add("hidden");
 
   </script>
 </body>
