@@ -49,6 +49,9 @@
     .fraction-line{width:92px;height:3px;background:#111;border-radius:999px;display:block}
     .fraction-help{font-size:.88rem;color:var(--muted)}
     .bank-note{font-size:.95rem}
+    .diagram-wrap{max-width:100%;overflow:hidden}
+    .diagram-wrap svg{shape-rendering:geometricPrecision}
+    .diagram text{paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
 
   </style>
 </head>
@@ -58,7 +61,7 @@
       <div class="exam-title">
         <div>
           <h1>11+ Mathematics Exam Practice</h1>
-          <p class="subtitle">England 11+ style: timed mixed maths paper, one mark per question, no hints during the test.</p>
+          <p class="subtitle">Timed mixed maths paper. One mark per question. No hints during the test.</p>
         </div>
         <div class="timer-box" aria-live="polite"><span>Time left</span><span class="timer" id="timerDisplay">60:00</span></div>
       </div>
@@ -717,18 +720,18 @@
       return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Spinner diagram with ${total} equal sections">${html}</svg>`;
     }
     function svgBarChart(labels, values, title = "Bar chart") {
-      const w = 640, h = 360, left = 78, top = 46, chartH = 238, chartW = 500;
+      const w = 620, h = 320, left = 72, top = 42, chartH = 210, chartW = 490;
       const max = Math.max(...values.map(Number), 1);
       const axisMax = niceAxisMax(max);
       const major = axisMajorStep(axisMax);
       const minor = axisMax <= 20 ? 1 : axisMax <= 50 ? 5 : 10;
       const stepW = chartW / values.length;
       const yFor = v => top + chartH - (Number(v) / axisMax) * chartH;
-      let html = svgText(w/2, 24, title, 19, 900);
+      let html = svgText(w/2, 24, title, 18, 900);
       for (let v = 0; v <= axisMax; v += minor) {
         const y = yFor(v);
         const isMajor = v % major === 0;
-        html += `<line x1="${left}" y1="${y}" x2="${left+chartW}" y2="${y}" stroke="${isMajor ? '#c7d2df' : '#edf2f7'}" stroke-width="${isMajor ? 1.2 : .7}"/>`;
+        html += `<line x1="${left}" y1="${y}" x2="${left+chartW}" y2="${y}" stroke="${isMajor ? '#c7d2df' : '#eef2f7'}" stroke-width="${isMajor ? 1.2 : .7}"/>`;
       }
       html += `<line x1="${left}" y1="${top}" x2="${left}" y2="${top+chartH}" stroke="#111827" stroke-width="3"/>`;
       html += `<line x1="${left}" y1="${top+chartH}" x2="${left+chartW}" y2="${top+chartH}" stroke="#111827" stroke-width="3"/>`;
@@ -740,19 +743,19 @@
       values.forEach((v, i) => {
         const bh = Math.max(0, chartH * Number(v) / axisMax);
         const x = left + i * stepW + stepW * .20;
-        const bw = stepW * .60;
+        const bw = Math.max(18, stepW * .60);
         const y = top + chartH - bh;
         html += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="#dbeafe" stroke="#111827" stroke-width="2.4"/>`;
-        html += svgText(x + bw/2, top + chartH + 28, labels[i], 13, 800);
+        html += svgText(x + bw/2, top + chartH + 27, labels[i], values.length > 8 ? 11 : 13, 800);
       });
       return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Bar chart with a clear scale from 0 to ${axisMax}">${html}</svg>`;
     }
 
     function svgPieChart(labels, values, title = "Pie chart") {
-      const w = 520, h = 330, cx = 170, cy = 170, r = 104;
+      const w = 500, h = 285, cx = 160, cy = 150, r = 92;
       const total = values.reduce((a,b)=>a+Number(b),0);
       const colours = ["#dbeafe", "#fef3c7", "#dcfce7", "#ede9fe", "#fee2e2", "#cffafe"];
-      let html = svgText(w/2, 26, title, 19, 900);
+      let html = svgText(w/2, 24, title, 18, 900);
       let angle = -Math.PI / 2;
       values.forEach((v, i) => {
         const slice = Number(v) / total * Math.PI * 2;
@@ -761,8 +764,8 @@
         const x2 = cx + r * Math.cos(end), y2 = cy + r * Math.sin(end);
         const large = slice > Math.PI ? 1 : 0;
         html += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z" fill="${colours[i % colours.length]}" stroke="#111827" stroke-width="2.4"/>`;
-        html += `<rect x="330" y="${84 + i*34}" width="20" height="20" fill="${colours[i % colours.length]}" stroke="#111827" stroke-width="1.5"/>`;
-        html += svgText(360, 100 + i*34, `${labels[i]}: ${v}`, 14, 800, "start");
+        html += `<rect x="310" y="${72 + i*33}" width="19" height="19" fill="${colours[i % colours.length]}" stroke="#111827" stroke-width="1.5"/>`;
+        html += svgText(340, 88 + i*33, `${labels[i]}: ${v}`, 14, 800, "start");
         angle = end;
       });
       html += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#111827" stroke-width="2.8"/>`;
@@ -859,15 +862,15 @@
     }
 
     function svgVennDiagram() {
-      const w = 520, h = 310;
-      let html = svgText(260, 28, "Venn diagram", 20, 900);
-      html += `<rect x="55" y="52" width="410" height="220" rx="4" fill="#fff" stroke="#111827" stroke-width="2.4"/>`;
-      html += `<circle cx="220" cy="155" r="92" fill="#dbeafe" fill-opacity="0.56" stroke="#111827" stroke-width="2.4"/>`;
-      html += `<circle cx="300" cy="155" r="92" fill="#fef3c7" fill-opacity="0.56" stroke="#111827" stroke-width="2.4"/>`;
-      html += svgText(155, 74, "multiples of 2", 14, 800, "start");
-      html += svgText(310, 74, "multiples of 3", 14, 800, "start");
-      html += svgText(260, 162, "X", 24, 900);
-      html += svgText(260, 294, "X is the overlap", 13, 800);
+      const w = 500, h = 255;
+      let html = svgText(250, 25, "Venn diagram", 18, 900);
+      html += `<rect x="54" y="42" width="392" height="180" rx="6" fill="#fff" stroke="#111827" stroke-width="2.4"/>`;
+      html += `<circle cx="210" cy="132" r="76" fill="#dbeafe" fill-opacity="0.58" stroke="#111827" stroke-width="2.4"/>`;
+      html += `<circle cx="290" cy="132" r="76" fill="#fef3c7" fill-opacity="0.58" stroke="#111827" stroke-width="2.4"/>`;
+      html += svgText(142, 64, "multiples of 2", 13, 800, "start");
+      html += svgText(304, 64, "multiples of 3", 13, 800, "start");
+      html += svgText(250, 140, "X", 24, 900);
+      html += svgText(78, 210, "outside", 12, 700, "start");
       return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Venn diagram with two overlapping circles labelled multiples of 2 and multiples of 3">${html}</svg>`;
     }
     function svgThermometer(temp) {
@@ -887,18 +890,18 @@
     }
 
     function svgLineGraph(labels, values, title = "Line graph") {
-      const w = 640, h = 360, left = 80, top = 48, chartW = 500, chartH = 230;
+      const w = 620, h = 320, left = 74, top = 42, chartW = 490, chartH = 210;
       const maxV = Math.max(...values.map(Number), 1);
       const axisMax = niceAxisMax(maxV);
       const major = axisMajorStep(axisMax);
       const minor = axisMax <= 20 ? 1 : axisMax <= 50 ? 5 : 10;
-      const xFor = i => left + i * (chartW / (values.length - 1));
+      const xFor = i => labels.length === 1 ? left : left + i * (chartW / (values.length - 1));
       const yFor = v => top + chartH - (Number(v) / axisMax) * chartH;
-      let html = svgText(w/2, 25, title, 19, 900);
+      let html = svgText(w/2, 24, title, 18, 900);
       for (let v = 0; v <= axisMax; v += minor) {
         const y = yFor(v);
         const isMajor = v % major === 0;
-        html += `<line x1="${left}" y1="${y}" x2="${left+chartW}" y2="${y}" stroke="${isMajor ? '#c7d2df' : '#edf2f7'}" stroke-width="${isMajor ? 1.2 : .7}"/>`;
+        html += `<line x1="${left}" y1="${y}" x2="${left+chartW}" y2="${y}" stroke="${isMajor ? '#c7d2df' : '#eef2f7'}" stroke-width="${isMajor ? 1.2 : .7}"/>`;
       }
       html += `<line x1="${left}" y1="${top}" x2="${left}" y2="${top+chartH}" stroke="#111827" stroke-width="3"/>`;
       html += `<line x1="${left}" y1="${top+chartH}" x2="${left+chartW}" y2="${top+chartH}" stroke="#111827" stroke-width="3"/>`;
@@ -910,7 +913,7 @@
       labels.forEach((lab, i) => {
         const x = xFor(i);
         html += `<line x1="${x}" y1="${top+chartH}" x2="${x}" y2="${top+chartH+7}" stroke="#111827" stroke-width="2"/>`;
-        html += svgText(x, top+chartH+28, lab, 13, 800);
+        html += svgText(x, top+chartH+27, lab, labels.length > 8 ? 11 : 13, 800);
       });
       const points = values.map((v,i) => `${xFor(i)},${yFor(v)}`).join(" ");
       html += `<polyline points="${points}" fill="none" stroke="#111827" stroke-width="3.2"/>`;
@@ -938,18 +941,25 @@
     }
 
     function svgRulerSpheres(a, b, c, d) {
-      const w = 520, h = 230, scale = 7, base = 170, x0 = 56;
-      const x = v => x0 + v * scale;
-      const r1 = (b - a) * scale / 2, r2 = (d - c) * scale / 2;
-      let html = svgText(260, 24, "Spheres beside a ruler", 18, 900);
-      html += `<rect x="40" y="${base}" width="440" height="26" fill="#fff" stroke="#16324f" stroke-width="2"/>`;
-      [[a, x(a)], [b, x(b)], [c, x(c)], [d, x(d)]].forEach(([v,xx]) => {
-        html += `<line x1="${xx}" y1="${base}" x2="${xx}" y2="${base-92}" stroke="#16324f" stroke-width="1.5" stroke-dasharray="4 3"/>`;
-        html += svgText(xx, base+48, fmt(v), 12, 800);
+      const w = 560, h = 250, base = 180, x0 = 62, rulerW = 436;
+      const minV = Math.floor(Math.min(a,b,c,d));
+      const maxV = Math.ceil(Math.max(a,b,c,d));
+      const span = Math.max(10, maxV - minV);
+      const scale = rulerW / span;
+      const x = v => x0 + (v - minV) * scale;
+      const r1 = Math.abs(b - a) * scale / 2, r2 = Math.abs(d - c) * scale / 2;
+      const cx1 = (x(a) + x(b)) / 2, cx2 = (x(c) + x(d)) / 2;
+      let html = svgText(w/2, 24, "Spheres beside a ruler", 18, 900);
+      html += `<rect x="${x0}" y="${base}" width="${rulerW}" height="24" fill="#fff" stroke="#111827" stroke-width="2"/>`;
+      const marks = [a,b,c,d].map(v => Number(v.toFixed ? v.toFixed(1) : v));
+      marks.forEach(v => {
+        const xx = x(v);
+        html += `<line x1="${xx}" y1="${base}" x2="${xx}" y2="${base-96}" stroke="#111827" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+        html += svgText(xx, base+42, fmt(v), 12, 800);
       });
-      html += `<circle cx="${(x(a)+x(b))/2}" cy="${base-r1}" r="${r1}" fill="#eef6ff" stroke="#16324f" stroke-width="3"/>`;
-      html += `<circle cx="${(x(c)+x(d))/2}" cy="${base-r2}" r="${r2}" fill="#fff3cf" stroke="#16324f" stroke-width="3"/>`;
-      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Two spheres by a ruler">${html}</svg>`;
+      html += `<circle cx="${cx1}" cy="${base-r1}" r="${r1}" fill="#eef6ff" stroke="#111827" stroke-width="2.8"/>`;
+      html += `<circle cx="${cx2}" cy="${base-r2}" r="${r2}" fill="#fff3cf" stroke="#111827" stroke-width="2.8"/>`;
+      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Two spheres by a ruler with clear edge readings">${html}</svg>`;
     }
 
     function svgIsoscelesAngle(apex, baseAngle = null) {
@@ -4094,35 +4104,62 @@
       }
       return null;
     }
-    function selectByTopic(topic, quota, used, startNumber) {
-      const entries = shuffle(BANK.filter(e => e.topic === topic && !used.has(e.id)));
+    function questionPromptKey(q) {
+      return String((q && q.prompt) || "").toLowerCase().replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+    }
+    function familyKey(entry) {
+      return `${entry.topic}|${entry.title}`;
+    }
+    function selectByTopic(topic, quota, usedEntries, usedFamilies, usedPrompts, startNumber) {
       const selected = [];
       const targetDiffs = [1,1,2,2,3,3,3,4,4,5,5];
-      for (let i = 0; i < quota; i++) {
-        const target = targetDiffs[Math.min(targetDiffs.length - 1, Math.floor(i / Math.max(1, quota) * targetDiffs.length))];
-        entries.sort((a,b) => Math.abs((a.difficulty||3)-target) - Math.abs((b.difficulty||3)-target) || Math.random() - .5);
-        const entry = entries.find(e => !used.has(e.id));
-        if (!entry) break;
-        used.add(entry.id);
+      let attempts = 0;
+      while (selected.length < quota && attempts < quota * 80) {
+        attempts += 1;
+        const target = targetDiffs[Math.min(targetDiffs.length - 1, Math.floor(selected.length / Math.max(1, quota) * targetDiffs.length))];
+        let pool = BANK.filter(e => e.topic === topic && !usedEntries.has(e.id) && !usedFamilies.has(familyKey(e)));
+        if (!pool.length) pool = BANK.filter(e => e.topic === topic && !usedEntries.has(e.id));
+        if (!pool.length) break;
+        pool.sort((a,b) => Math.abs((a.difficulty||3)-target) - Math.abs((b.difficulty||3)-target) || Math.random() - .5);
+        const entry = pool[0];
+        usedEntries.add(entry.id);
         const q = generateFromEntry(entry, startNumber + selected.length + 1);
-        if (q) selected.push(q);
+        if (!q) continue;
+        const pKey = questionPromptKey(q);
+        const fKey = familyKey(entry);
+        if (usedPrompts.has(pKey)) continue;
+        if (usedFamilies.has(fKey)) continue;
+        usedFamilies.add(fKey);
+        usedPrompts.add(pKey);
+        selected.push(q);
       }
       return selected;
     }
     function createExamQuestions(count) {
-      const used = new Set();
+      const usedEntries = new Set();
+      const usedFamilies = new Set();
+      const usedPrompts = new Set();
       let questions = [];
       const multiplier = count / EXAM_QUESTION_COUNT;
       ACTIVE_TOPICS.forEach(topic => {
         const quota = Math.max(1, Math.round((EXAM_TOPIC_QUOTAS[topic] || 5) * multiplier));
-        questions = questions.concat(selectByTopic(topic, quota, used, questions.length));
+        questions = questions.concat(selectByTopic(topic, quota, usedEntries, usedFamilies, usedPrompts, questions.length));
       });
-      while (questions.length < count) {
-        const entry = pick(BANK.filter(e => !used.has(e.id)));
+      let guard = 0;
+      while (questions.length < count && guard < BANK.length * 2) {
+        guard += 1;
+        const pool = BANK.filter(e => !usedEntries.has(e.id) && !usedFamilies.has(familyKey(e)));
+        const entry = pool.length ? pick(pool) : pick(BANK.filter(e => !usedEntries.has(e.id)));
         if (!entry) break;
-        used.add(entry.id);
+        usedEntries.add(entry.id);
         const q = generateFromEntry(entry, questions.length + 1);
-        if (q) questions.push(q);
+        if (!q) continue;
+        const pKey = questionPromptKey(q);
+        const fKey = familyKey(entry);
+        if (usedPrompts.has(pKey) || usedFamilies.has(fKey)) continue;
+        usedFamilies.add(fKey);
+        usedPrompts.add(pKey);
+        questions.push(q);
       }
       questions = shuffle(questions).sort((a,b) => (a.difficulty + Math.random()*.6) - (b.difficulty + Math.random()*.6));
       return questions.slice(0, count).map((q,i) => Object.assign(q, { examNumber: i + 1 }));
