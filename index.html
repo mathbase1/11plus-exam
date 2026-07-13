@@ -53,6 +53,23 @@
     .diagram-wrap svg{shape-rendering:geometricPrecision}
     .diagram text{paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
 
+
+    /* Final audit polish: compact exam-style questions, clean diagrams, no raw notation leakage */
+    .question-text{font-size:1.16rem;line-height:1.36;font-weight:800;margin:0 0 8px;letter-spacing:.005em}
+    .question-line{display:block;margin:0 0 .22rem;padding:0;line-height:1.36}
+    .question-line:last-child{margin-bottom:0}
+    .diagram-wrap{margin:4px 0 8px;padding:0;max-width:100%;overflow:hidden;place-items:center}
+    .diagram{max-width:min(100%,650px);max-height:340px;width:auto;height:auto;object-fit:contain;background:#fff;border:1px solid #cfd6df;border-radius:5px;display:block;margin:0 auto}
+    .diagram text{paint-order:stroke;stroke:#fff;stroke-width:2.2px;stroke-linejoin:round}
+    .diagram .no-stroke{text-shadow:none;stroke:none}
+    .choice .label{line-height:1.32}
+    .choice .label math,.question-text math,.review-feedback math,.mini-table math,.table-card math{font-size:1.08em;line-height:1;vertical-align:middle}
+    .math-frac,.math-mixed{margin:0 .12em;vertical-align:middle}
+    .math-pow{margin:0 .08em;vertical-align:middle}
+    .fraction-answer-group label{margin-bottom:2px}
+    .fraction-entry{margin-top:0}
+    .fraction-help{margin-top:2px}
+
   </style>
 </head>
 <body>
@@ -393,6 +410,16 @@
     function mathFracHtml(num, den) {
       return `<math class="math-frac" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(num)} over ${escapeHtml(den)}"><mfrac><mn>${escapeHtml(num)}</mn><mn>${escapeHtml(den)}</mn></mfrac></math>`;
     }
+    function mathPowHtml(base, exp) {
+      const b = String(base);
+      const e = String(exp);
+      const baseTag = /^[A-Za-z]+$/.test(b) ? `<mi>${escapeHtml(b)}</mi>` : `<mn>${escapeHtml(b)}</mn>`;
+      const expTag = e === "□" ? `<mo>□</mo>` : (/^[A-Za-z]+$/.test(e) ? `<mi>${escapeHtml(e)}</mi>` : `<mn>${escapeHtml(e)}</mn>`);
+      return `<math class="math-pow" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(b)} to the power of ${escapeHtml(e)}"><msup>${baseTag}${expTag}</msup></math>`;
+    }
+    function mathTermHtml(coeff, variable) {
+      return `<math class="math-term" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(coeff)} ${escapeHtml(variable)}"><mn>${escapeHtml(coeff)}</mn><mi>${escapeHtml(variable)}</mi></math>`;
+    }
     function mathMixedHtml(whole, num, den) {
       return `<math class="math-mixed" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(whole)} and ${escapeHtml(num)} over ${escapeHtml(den)}"><mn>${escapeHtml(whole)}</mn><mfrac><mn>${escapeHtml(num)}</mn><mn>${escapeHtml(den)}</mn></mfrac></math>`;
     }
@@ -438,6 +465,11 @@
       const snippets = [];
       const stash = html => { const key = placeholderKey(snippets.length); snippets.push(html); return key; };
       safe = safe.replace(/\b\d{1,2}:\d{2}\b/g, m => stash(m));
+      safe = safe.replace(/\b([A-Za-z]|\d+)\^([A-Za-z0-9□]+)\b/g, (_, base, exp) => stash(mathPowHtml(base, exp)));
+      safe = safe.replace(/\b([A-Za-z]|\d+)&lt;sup&gt;([^&<]+)&lt;\/sup&gt;/g, (_, base, exp) => stash(mathPowHtml(base, exp)));
+      safe = safe.replace(/\b([A-Za-z]|\d+)²\b/g, (_, base) => stash(mathPowHtml(base, 2)));
+      safe = safe.replace(/\b([A-Za-z]|\d+)³\b/g, (_, base) => stash(mathPowHtml(base, 3)));
+      safe = safe.replace(/\b(\d+)([a-zA-Z])\b/g, (_, coeff, variable) => stash(mathTermHtml(coeff, variable)));
       safe = safe.replace(/\(([−-]?\d+(?:\.\d+)?),\s*([−-]?\d+(?:\.\d+)?)\)/g, (_, x, y) => stash(mathCoordHtml(x, y)));
       safe = safe.replace(/\b([−-]?\d+)\s+(\d+)\/(\d+)\b/g, (_, whole, num, den) => stash(mathMixedHtml(whole, num, den)));
       safe = safe.replace(/\b([−-]?\d+)\/(\d+)\b/g, (_, num, den) => stash(mathFracHtml(num, den)));
@@ -445,6 +477,11 @@
       safe = safe.replace(/\b([−-]?\d+(?:\.\d+)?)%/g, (_, amount) => stash(mathPercentHtml(amount)));
       safe = safe.replace(/(^|[^A-Za-z0-9_@])([−-]?\d+(?:\.\d+)?)(?![A-Za-z0-9_@])/g, (m, prefix, amount) => prefix + stash(mathNumberHtml(amount)));
       return safe.replace(/@@MATH([A-Z]+)@@/g, (_, key) => snippets[placeholderIndex(key)]);
+    }
+    function formatQuestionText(value) {
+      const html = mathifyText(value);
+      const split = html.replace(/(^|[^0-9])\.(?![0-9])\s+/g, "$1.@@LINE@@");
+      return split.split("@@LINE@@").map(part => part.trim()).filter(Boolean).map(part => `<span class="question-line">${part}</span>`).join("");
     }
     function parseFraction(raw) {
       const original = String(raw).trim().toLowerCase();
@@ -862,16 +899,18 @@
     }
 
     function svgVennDiagram() {
-      const w = 500, h = 255;
-      let html = svgText(250, 25, "Venn diagram", 18, 900);
-      html += `<rect x="54" y="42" width="392" height="180" rx="6" fill="#fff" stroke="#111827" stroke-width="2.4"/>`;
-      html += `<circle cx="210" cy="132" r="76" fill="#dbeafe" fill-opacity="0.58" stroke="#111827" stroke-width="2.4"/>`;
-      html += `<circle cx="290" cy="132" r="76" fill="#fef3c7" fill-opacity="0.58" stroke="#111827" stroke-width="2.4"/>`;
-      html += svgText(142, 64, "multiples of 2", 13, 800, "start");
-      html += svgText(304, 64, "multiples of 3", 13, 800, "start");
-      html += svgText(250, 140, "X", 24, 900);
-      html += svgText(78, 210, "outside", 12, 700, "start");
-      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Venn diagram with two overlapping circles labelled multiples of 2 and multiples of 3">${html}</svg>`;
+      const w = 620, h = 330;
+      let html = svgText(310, 28, "Venn diagram", 18, 900);
+      html += `<rect x="70" y="52" width="480" height="238" rx="8" fill="#fff" stroke="#111827" stroke-width="2.4"/>`;
+      html += `<circle cx="260" cy="168" r="98" fill="#dbeafe" fill-opacity="0.55" stroke="#111827" stroke-width="2.5"/>`;
+      html += `<circle cx="360" cy="168" r="98" fill="#fef3c7" fill-opacity="0.55" stroke="#111827" stroke-width="2.5"/>`;
+      html += `<rect x="128" y="63" width="154" height="28" rx="5" fill="#fff" stroke="#cbd5e1"/>`;
+      html += `<rect x="338" y="63" width="154" height="28" rx="5" fill="#fff" stroke="#cbd5e1"/>`;
+      html += svgText(205, 82, "multiples of 2", 13, 900);
+      html += svgText(415, 82, "multiples of 3", 13, 900);
+      html += svgText(310, 176, "X", 26, 900);
+      html += svgText(98, 272, "outside", 12, 800, "start");
+      return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Venn diagram with two clear overlapping circles labelled multiples of 2 and multiples of 3">${html}</svg>`;
     }
     function svgThermometer(temp) {
       const w = 220, h = 260, x = 112, top = 38, bottom = 210, min = -10, max = 30;
@@ -3600,13 +3639,13 @@
         const exp = rint(2, Math.min(5, 2 + d));
         const value = Math.pow(base, exp);
         if (Math.random() < .55) {
-          return qBase("number", "Exam powers and missing boxes", d, "short", `Fill the box: ${base}<sup>□</sup> = ${value}.`, exp, {
+          return qBase("number", "Exam powers and missing boxes", d, "short", `Fill the box: ${base}^□ = ${value}.`, exp, {
             hint: `Count how many times ${base} is multiplied by itself.`, explanation: `${Array(exp).fill(base).join(" × ")} = ${value}.`
           });
         }
-        return qBase("number", "Exam powers and missing boxes", d, "mc", `What is ${base}<sup>${exp}</sup>?`, value, {
+        return qBase("number", "Exam powers and missing boxes", d, "mc", `What is ${base}^${exp}?`, value, {
           choices: makeChoices(value, [base*exp, value+base, Math.max(1,value-base), Math.pow(base, exp-1)]),
-          hint: "The small raised number tells you how many equal factors to multiply.", explanation: `${base}<sup>${exp}</sup> = ${value}.`
+          hint: "The small raised number tells you how many equal factors to multiply.", explanation: `${base}^${exp} = ${value}.`
         });
       }, 10);
 
@@ -4081,6 +4120,8 @@
     }
     function isElevenPlusAppropriate(q) {
       if (!q || !q.prompt) return false;
+      if (/[<>]|&lt;|&gt;/.test(String(q.prompt))) return false;
+      if (q.title === "Probability scale") return false;
       if (q.answerType === "number" && q.kind !== "mc" && typeof q.answer === "number") {
         if (!Number.isInteger(q.answer)) return false;
       }
@@ -4105,7 +4146,22 @@
       return null;
     }
     function questionPromptKey(q) {
-      return String((q && q.prompt) || "").toLowerCase().replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+      const raw = String((q && q.prompt) || "").toLowerCase().replace(/<[^>]+>/g, " ");
+      const skeleton = raw
+        .replace(/\b\d{1,2}:\d{2}\b/g, " time ")
+        .replace(/[£$]\d+(?:\.\d+)?/g, " money ")
+        .replace(/\b\d+\s+\d+\/\d+\b/g, " mixedfraction ")
+        .replace(/\b\d+\/\d+\b/g, " fraction ")
+        .replace(/\b\d+(?:\.\d+)?%/g, " percent ")
+        .replace(/\b\d+(?:\.\d+)?\b/g, " number ")
+        .replace(/\s+/g, " ")
+        .trim();
+      const diagramType = String(q && q.diagram || "").includes("Venn diagram") ? "|venn" :
+        String(q && q.diagram || "").includes("Bar chart") ? "|bar" :
+        String(q && q.diagram || "").includes("Line graph") ? "|line" :
+        String(q && q.diagram || "").includes("Cube net") ? "|net" :
+        String(q && q.diagram || "").includes("Coordinate grid") ? "|grid" : "";
+      return `${q.topic}|${skeleton}${diagramType}`;
     }
     function familyKey(entry) {
       return `${entry.topic}|${entry.title}`;
@@ -4209,7 +4265,7 @@
       examEls.questionNumber.textContent = `${examState.reviewMode ? "Review" : "Question"} ${examState.currentIndex + 1} of ${examState.questions.length}`;
       examEls.markText.textContent = "1 mark";
       examEls.tagRow.innerHTML = `<span class="tag">${escapeHtml(TOPICS[q.topic].name)}</span>`;
-      examEls.questionText.innerHTML = mathifyText(q.prompt);
+      examEls.questionText.innerHTML = formatQuestionText(q.prompt);
       examEls.diagramWrap.innerHTML = q.diagram || "";
       examEls.choicesWrap.innerHTML = "";
       examEls.shortAnswerWrap.classList.add("hidden");
