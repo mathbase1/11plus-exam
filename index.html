@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,6 +68,39 @@
     .fraction-answer-group label{margin-bottom:2px}
     .fraction-entry{margin-top:0}
     .fraction-help{margin-top:2px}
+
+  
+
+    /* Final requested polish: MathML is used only for fractions. Everything else is plain text. */
+    .question-text{font-size:1.15rem;line-height:1.35}
+    .question-line{display:block;margin:0 0 .18rem;line-height:1.34}
+    .question-line:last-child{margin-bottom:0}
+    math.math-frac, math.math-mixed{font-size:1.08em;vertical-align:-0.32em;margin:0 .08em;line-height:1}
+    .choice .label math.math-frac,.choice .label math.math-mixed,.review-feedback math.math-frac,.review-feedback math.math-mixed,.mini-table math.math-frac,.mini-table math.math-mixed{font-size:1.05em}
+    .math-num,.math-money,.math-percent,.math-coord,.math-pow,.math-term{font:inherit;vertical-align:baseline;margin:0}
+    .diagram-wrap{margin:4px 0 8px;gap:0;padding:2px 0;max-width:100%;overflow:visible;place-items:center}
+    .diagram{max-width:min(100%,720px);max-height:430px;width:auto;height:auto;object-fit:contain;border:1px solid #cfd6df;border-radius:4px;background:#fff;display:block;margin:0 auto;overflow:visible}
+    .diagram-wrap svg{overflow:visible;shape-rendering:geometricPrecision}
+    .diagram text{paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+    .fraction-entry{display:inline-grid;grid-template-rows:auto 3px auto;justify-items:center;align-items:center;gap:5px;padding:10px 14px;border:1.8px solid #111;border-radius:8px;background:#fff;min-width:112px}
+    .fraction-entry input{width:84px;min-height:42px;text-align:center;border:1.7px solid #111;border-radius:6px;font:inherit;font-weight:800;padding:6px;background:#fff}
+    .fraction-line{width:94px;height:3px;background:#111;border-radius:999px;display:block}
+    @media(max-width:860px){.diagram{max-width:100%;max-height:360px}.question-text{font-size:1.08rem}}
+
+
+    /* Final requested display rules: text stays black; plain text numbers are dark blue; MathML is only used for fractions, powers and coordinates. */
+    :root{--number-blue:#0b3f8a}
+    .question-text,.choice .label,.review-feedback,.mini-table,.table-card{color:#111827}
+    .num-token{color:var(--number-blue);font-weight:800}
+    math.math-frac,math.math-mixed,math.math-pow,math.math-coord{color:var(--number-blue);font-size:1.08em;line-height:1;vertical-align:middle;margin:0 .08em}
+    math.math-frac,math.math-mixed{vertical-align:-0.26em}
+    math.math-coord{white-space:nowrap}
+    .choice .label math,.question-text math,.review-feedback math,.mini-table math,.table-card math{font-size:1.06em}
+    .diagram-wrap{margin:4px 0 8px;gap:0;padding:2px 0;max-width:100%;overflow:auto;place-items:center}
+    .diagram{max-width:min(100%,760px);max-height:440px;width:auto;height:auto;object-fit:contain;border:1px solid #cfd6df;border-radius:5px;background:#fff;display:block;margin:0 auto}
+    .diagram-wrap svg{overflow:visible;shape-rendering:geometricPrecision}
+    .diagram text{paint-order:stroke;stroke:#fff;stroke-width:2.4px;stroke-linejoin:round}
+    @media(max-width:860px){.diagram{max-width:100%;max-height:380px}.question-text{font-size:1.08rem}.question-line{margin-bottom:.16rem}}
 
   </style>
 </head>
@@ -404,24 +436,60 @@
       return `${s.num}/${s.den}`;
     }
 
+    function plainSuperscript(value) {
+      const map = {"0":"⁰","1":"¹","2":"²","3":"³","4":"⁴","5":"⁵","6":"⁶","7":"⁷","8":"⁸","9":"⁹","+":"⁺","-":"⁻","−":"⁻","(":"⁽",")":"⁾"};
+      const text = String(value ?? "").trim();
+      if (/^[0-9+\-−()]+$/.test(text)) return text.split("").map(ch => map[ch] || ch).join("");
+      if (text === "□") return " to the power of □";
+      return "^" + text;
+    }
+    function rawMathText(value) {
+      return String(value ?? "")
+        .replace(/([A-Za-z0-9])\s*<sup>([^<]+)<\/sup>/gi, (_, b, e) => `${b}${plainSuperscript(e)}`)
+        .replace(/<sup>([^<]+)<\/sup>/gi, (_, e) => plainSuperscript(e))
+        .replace(/([A-Za-z0-9])\s*<sub>([^<]+)<\/sub>/gi, (_, b, e) => `${b}_${e}`)
+        .replace(/<\/?(?:sup|sub)>/gi, "");
+    }
+    function normalisePlainMathText(value) {
+      return rawMathText(value)
+        .replace(/\b(cm|mm|m|km)2\b/g, "$1²")
+        .replace(/\b(cm|mm|m|km)3\b/g, "$1³")
+        .replace(/\bm2\b/g, "m²")
+        .replace(/\bm3\b/g, "m³")
+        .replace(/\bcm2\b/g, "cm²")
+        .replace(/\bcm3\b/g, "cm³")
+        .replace(/\bmm2\b/g, "mm²")
+        .replace(/\bmm3\b/g, "mm³");
+    }
     function mathNumberHtml(n) {
-      return `<math class="math-num" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(n)}"><mn>${escapeHtml(n)}</mn></math>`;
+      return `<span class="num-token">${escapeHtml(n)}</span>`;
+    }
+    function mathMlToken(tag, value) {
+      return `<${tag}>${escapeHtml(String(value ?? "").replace(/^−/, "-"))}</${tag}>`;
+    }
+    function mathMlNumber(value) {
+      return mathMlToken("mn", value);
+    }
+    function mathMlBase(value) {
+      const s = String(value ?? "").trim();
+      return /^[A-Za-z]$/.test(s) ? mathMlToken("mi", s) : mathMlNumber(s);
+    }
+    function mathMlExponent(value) {
+      const s = String(value ?? "").trim();
+      if (s === "□") return mathMlToken("mo", "□");
+      return /^[A-Za-z]$/.test(s) ? mathMlToken("mi", s) : mathMlNumber(s);
     }
     function mathFracHtml(num, den) {
-      return `<math class="math-frac" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(num)} over ${escapeHtml(den)}"><mfrac><mn>${escapeHtml(num)}</mn><mn>${escapeHtml(den)}</mn></mfrac></math>`;
+      return `<math class="math-frac" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(num)} over ${escapeHtml(den)}"><mfrac>${mathMlNumber(num)}${mathMlNumber(den)}</mfrac></math>`;
     }
     function mathPowHtml(base, exp) {
-      const b = String(base);
-      const e = String(exp);
-      const baseTag = /^[A-Za-z]+$/.test(b) ? `<mi>${escapeHtml(b)}</mi>` : `<mn>${escapeHtml(b)}</mn>`;
-      const expTag = e === "□" ? `<mo>□</mo>` : (/^[A-Za-z]+$/.test(e) ? `<mi>${escapeHtml(e)}</mi>` : `<mn>${escapeHtml(e)}</mn>`);
-      return `<math class="math-pow" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(b)} to the power of ${escapeHtml(e)}"><msup>${baseTag}${expTag}</msup></math>`;
+      return `<math class="math-pow" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(base)} to the power of ${escapeHtml(exp)}"><msup>${mathMlBase(base)}${mathMlExponent(exp)}</msup></math>`;
     }
     function mathTermHtml(coeff, variable) {
-      return `<math class="math-term" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(coeff)} ${escapeHtml(variable)}"><mn>${escapeHtml(coeff)}</mn><mi>${escapeHtml(variable)}</mi></math>`;
+      return `${mathNumberHtml(coeff)}${escapeHtml(variable)}`;
     }
     function mathMixedHtml(whole, num, den) {
-      return `<math class="math-mixed" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(whole)} and ${escapeHtml(num)} over ${escapeHtml(den)}"><mn>${escapeHtml(whole)}</mn><mfrac><mn>${escapeHtml(num)}</mn><mn>${escapeHtml(den)}</mn></mfrac></math>`;
+      return `<math class="math-mixed" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(whole)} and ${escapeHtml(num)} over ${escapeHtml(den)}"><mn>${escapeHtml(whole)}</mn><mspace width="0.12em"></mspace><mfrac>${mathMlNumber(num)}${mathMlNumber(den)}</mfrac></math>`;
     }
     function mathFractionObjectHtml(fr) {
       const s = simplify(fr.num, fr.den);
@@ -439,16 +507,18 @@
     function mathFractionChoiceHtml(fr) {
       const num = Number(fr.num), den = Number(fr.den);
       if (!den || den === 1) return mathNumberHtml(num);
-      return mathFracHtml(num, den);
+      const s = simplify(num, den);
+      if (Math.abs(s.num) > s.den) return mathFractionObjectHtml(s);
+      return mathFracHtml(s.num, s.den);
     }
     function mathMoneyHtml(symbol, amount) {
-      return `<math class="math-money" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(symbol)}${escapeHtml(amount)}"><mo>${escapeHtml(symbol)}</mo><mn>${escapeHtml(amount)}</mn></math>`;
+      return `${escapeHtml(symbol)}${mathNumberHtml(amount)}`;
     }
     function mathPercentHtml(amount) {
-      return `<math class="math-percent" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="${escapeHtml(amount)} percent"><mn>${escapeHtml(amount)}</mn><mo>%</mo></math>`;
+      return `${mathNumberHtml(amount)}%`;
     }
     function mathCoordHtml(x, y) {
-      return `<math class="math-coord" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="coordinate ${escapeHtml(x)}, ${escapeHtml(y)}"><mo>(</mo><mn>${escapeHtml(x)}</mn><mo>,</mo><mn>${escapeHtml(y)}</mn><mo>)</mo></math>`;
+      return `<math class="math-coord" xmlns="http://www.w3.org/1998/Math/MathML" aria-label="coordinates ${escapeHtml(x)}, ${escapeHtml(y)}"><mo>(</mo>${mathMlNumber(x)}<mo>,</mo><mspace width="0.22em"></mspace>${mathMlNumber(y)}<mo>)</mo></math>`;
     }
     function placeholderKey(n) {
       let s = ""; n += 1;
@@ -460,22 +530,27 @@
       for (const ch of key) n = n * 26 + (ch.charCodeAt(0) - 64);
       return n - 1;
     }
+    function superscriptToPlain(value) {
+      const map = {"⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9","⁺":"+","⁻":"-"};
+      return String(value || "").split("").map(ch => map[ch] || ch).join("");
+    }
+    function wrapPlainNumbers(safe) {
+      return safe.replace(/[−-]?\d+(?:,\d{3})*(?:\.\d+)?/g, m => `<span class="num-token">${m}</span>`);
+    }
     function mathifyText(value) {
-      let safe = escapeHtml(String(value ?? ""));
+      let safe = escapeHtml(normalisePlainMathText(String(value ?? "")));
       const snippets = [];
       const stash = html => { const key = placeholderKey(snippets.length); snippets.push(html); return key; };
-      safe = safe.replace(/\b\d{1,2}:\d{2}\b/g, m => stash(m));
-      safe = safe.replace(/\b([A-Za-z]|\d+)\^([A-Za-z0-9□]+)\b/g, (_, base, exp) => stash(mathPowHtml(base, exp)));
-      safe = safe.replace(/\b([A-Za-z]|\d+)&lt;sup&gt;([^&<]+)&lt;\/sup&gt;/g, (_, base, exp) => stash(mathPowHtml(base, exp)));
-      safe = safe.replace(/\b([A-Za-z]|\d+)²\b/g, (_, base) => stash(mathPowHtml(base, 2)));
-      safe = safe.replace(/\b([A-Za-z]|\d+)³\b/g, (_, base) => stash(mathPowHtml(base, 3)));
-      safe = safe.replace(/\b(\d+)([a-zA-Z])\b/g, (_, coeff, variable) => stash(mathTermHtml(coeff, variable)));
+
       safe = safe.replace(/\(([−-]?\d+(?:\.\d+)?),\s*([−-]?\d+(?:\.\d+)?)\)/g, (_, x, y) => stash(mathCoordHtml(x, y)));
       safe = safe.replace(/\b([−-]?\d+)\s+(\d+)\/(\d+)\b/g, (_, whole, num, den) => stash(mathMixedHtml(whole, num, den)));
       safe = safe.replace(/\b([−-]?\d+)\/(\d+)\b/g, (_, num, den) => stash(mathFracHtml(num, den)));
-      safe = safe.replace(/([£$])(\d+(?:\.\d+)?)/g, (_, symbol, amount) => stash(mathMoneyHtml(symbol, amount)));
-      safe = safe.replace(/\b([−-]?\d+(?:\.\d+)?)%/g, (_, amount) => stash(mathPercentHtml(amount)));
-      safe = safe.replace(/(^|[^A-Za-z0-9_@])([−-]?\d+(?:\.\d+)?)(?![A-Za-z0-9_@])/g, (m, prefix, amount) => prefix + stash(mathNumberHtml(amount)));
+      safe = safe.replace(/\b([A-Za-z]|[−-]?\d+(?:\.\d+)?)\s*(?:\^|\*\*)\s*(□|[A-Za-z]|[−-]?\d+)/g, (_, base, exp) => stash(mathPowHtml(base, exp)));
+      safe = safe.replace(/\b([A-Za-z]|[−-]?\d+(?:\.\d+)?)\s+to the power of\s+(□|[A-Za-z]|[−-]?\d+)/gi, (_, base, exp) => stash(mathPowHtml(base, exp)));
+      safe = safe.replace(/\b([A-Za-z]|[−-]?\d+(?:\.\d+)?)\s+squared\b/gi, (_, base) => stash(mathPowHtml(base, 2)));
+      safe = safe.replace(/\b([A-Za-z]|[−-]?\d+(?:\.\d+)?)\s+cubed\b/gi, (_, base) => stash(mathPowHtml(base, 3)));
+      safe = safe.replace(/(^|[^A-Za-z0-9])([A-Za-z]|[−-]?\d+(?:\.\d+)?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/g, (match, prefix, base, exp) => `${prefix}${stash(mathPowHtml(base, superscriptToPlain(exp)))}`);
+      safe = wrapPlainNumbers(safe);
       return safe.replace(/@@MATH([A-Z]+)@@/g, (_, key) => snippets[placeholderIndex(key)]);
     }
     function formatQuestionText(value) {
@@ -614,6 +689,11 @@
       if (axisMax <= 50) return 10;
       return 20;
     }
+
+    function sectionLabel(count, colour) {
+      return `${count} ${colour} ${count === 1 ? "section" : "sections"}`;
+    }
+
     function easyGraphValue(min, max, step = 5) {
       const lo = Math.ceil(min / step) * step;
       const hi = Math.floor(max / step) * step;
@@ -709,7 +789,7 @@
       const w = 520, h = 130, left = 38, right = 482, y = 58;
       const showMarker = typeof pos === "number" && Number.isFinite(pos);
       const x = showMarker ? left + pos * (right - left) : null;
-      const labels = [[0,"impossible"],[0.25,"unlikely"],[0.5,"even chance"],[0.75,"likely"],[1,"certain"]];
+      const labels = [[0,"0"],[0.25,"¼"],[0.5,"½"],[0.75,"¾"],[1,"1"]];
       const zoneColours = ["#ffe1e1", "#fff1bf", "#eef4ff", "#e1f4e4"];
       let html = "";
       for (let i = 0; i < 4; i++) {
@@ -899,17 +979,17 @@
     }
 
     function svgVennDiagram() {
-      const w = 620, h = 330;
-      let html = svgText(310, 28, "Venn diagram", 18, 900);
-      html += `<rect x="70" y="52" width="480" height="238" rx="8" fill="#fff" stroke="#111827" stroke-width="2.4"/>`;
-      html += `<circle cx="260" cy="168" r="98" fill="#dbeafe" fill-opacity="0.55" stroke="#111827" stroke-width="2.5"/>`;
-      html += `<circle cx="360" cy="168" r="98" fill="#fef3c7" fill-opacity="0.55" stroke="#111827" stroke-width="2.5"/>`;
-      html += `<rect x="128" y="63" width="154" height="28" rx="5" fill="#fff" stroke="#cbd5e1"/>`;
-      html += `<rect x="338" y="63" width="154" height="28" rx="5" fill="#fff" stroke="#cbd5e1"/>`;
-      html += svgText(205, 82, "multiples of 2", 13, 900);
-      html += svgText(415, 82, "multiples of 3", 13, 900);
-      html += svgText(310, 176, "X", 26, 900);
-      html += svgText(98, 272, "outside", 12, 800, "start");
+      const w = 640, h = 345;
+      let html = svgText(320, 30, "Venn diagram", 18, 900);
+      html += `<rect x="76" y="56" width="488" height="246" rx="8" fill="#fff" stroke="#111827" stroke-width="2.4"/>`;
+      html += `<circle cx="270" cy="176" r="98" fill="#dbeafe" fill-opacity="0.55" stroke="#111827" stroke-width="2.5"/>`;
+      html += `<circle cx="370" cy="176" r="98" fill="#fef3c7" fill-opacity="0.55" stroke="#111827" stroke-width="2.5"/>`;
+      html += `<rect x="132" y="68" width="162" height="30" rx="5" fill="#fff" stroke="#cbd5e1"/>`;
+      html += `<rect x="346" y="68" width="162" height="30" rx="5" fill="#fff" stroke="#cbd5e1"/>`;
+      html += svgText(213, 88, "multiples of 2", 13, 900);
+      html += svgText(427, 88, "multiples of 3", 13, 900);
+      html += svgText(320, 184, "X", 26, 900);
+      html += svgText(101, 286, "outside both", 12, 800, "start");
       return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Venn diagram with two clear overlapping circles labelled multiples of 2 and multiples of 3">${html}</svg>`;
     }
     function svgThermometer(temp) {
@@ -980,24 +1060,32 @@
     }
 
     function svgRulerSpheres(a, b, c, d) {
-      const w = 560, h = 250, base = 180, x0 = 62, rulerW = 436;
+      const w = 620, h = 300, base = 205, rulerW = 470;
       const minV = Math.floor(Math.min(a,b,c,d));
       const maxV = Math.ceil(Math.max(a,b,c,d));
       const span = Math.max(10, maxV - minV);
-      const scale = rulerW / span;
-      const x = v => x0 + (v - minV) * scale;
+      const rawScale = rulerW / span;
+      const maxDiameter = Math.max(Math.abs(b-a), Math.abs(d-c));
+      const scale = Math.min(rawScale, 150 / Math.max(1, maxDiameter));
+      const actualW = span * scale;
+      const startX = (w - actualW) / 2;
+      const x = v => startX + (v - minV) * scale;
       const r1 = Math.abs(b - a) * scale / 2, r2 = Math.abs(d - c) * scale / 2;
       const cx1 = (x(a) + x(b)) / 2, cx2 = (x(c) + x(d)) / 2;
       let html = svgText(w/2, 24, "Spheres beside a ruler", 18, 900);
-      html += `<rect x="${x0}" y="${base}" width="${rulerW}" height="24" fill="#fff" stroke="#111827" stroke-width="2"/>`;
-      const marks = [a,b,c,d].map(v => Number(v.toFixed ? v.toFixed(1) : v));
-      marks.forEach(v => {
-        const xx = x(v);
-        html += `<line x1="${xx}" y1="${base}" x2="${xx}" y2="${base-96}" stroke="#111827" stroke-width="1.5" stroke-dasharray="4 3"/>`;
-        html += svgText(xx, base+42, fmt(v), 12, 800);
-      });
+      html += `<rect x="${startX}" y="${base}" width="${actualW}" height="24" fill="#fff" stroke="#111827" stroke-width="2"/>`;
       html += `<circle cx="${cx1}" cy="${base-r1}" r="${r1}" fill="#eef6ff" stroke="#111827" stroke-width="2.8"/>`;
       html += `<circle cx="${cx2}" cy="${base-r2}" r="${r2}" fill="#fff3cf" stroke="#111827" stroke-width="2.8"/>`;
+      const marks = [a,b,c,d].map(v => ({v, xx:x(v)})).sort((m,n)=>m.xx-n.xx);
+      let lastX = -999, lastLevel = 0;
+      marks.forEach(m => {
+        const level = (m.xx - lastX < 54) ? 1 - lastLevel : 0;
+        const labelY = base + 42 + level * 22;
+        html += `<line x1="${m.xx}" y1="${base}" x2="${m.xx}" y2="${base-120}" stroke="#111827" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+        html += `<line x1="${m.xx}" y1="${base+24}" x2="${m.xx}" y2="${labelY-14}" stroke="#111827" stroke-width="1"/>`;
+        html += svgText(m.xx, labelY, fmt(m.v), 12, 800);
+        lastX = m.xx; lastLevel = level;
+      });
       return `<svg class="diagram" viewBox="0 0 ${w} ${h}" role="img" aria-label="Two spheres by a ruler with clear edge readings">${html}</svg>`;
     }
 
@@ -1305,7 +1393,7 @@
 
       addFamily("percentRatio", "Recipe proportion", (d) => {
         const people = rint(2, 5), newPeople = people * rint(2, 4 + Math.floor(d/2));
-        const flour = rint(80, 180 + d*40);
+        const flour = rint(8, 18 + d*4) * 10;
         const ans = flour * newPeople / people;
         return qBase("percentRatio", "Recipe proportion", d, "short", `A recipe for ${people} people uses ${flour} g of flour. How many grams of flour are needed for ${newPeople} people?`, ans, {
           hint: `Find the scale factor from ${people} to ${newPeople}.`,
@@ -1654,11 +1742,11 @@
         const total = red + blue + green;
         const colour = pick([["red", red], ["blue", blue], ["green", green]]);
         const ans = simplify(colour[1], total);
-        return qBase("probability", "Spinner probability", d, "short", `The spinner has ${red} red sections, ${blue} blue sections and ${green} green sections. What is the probability of landing on ${colour[0]}?`, ans, {
+        return qBase("probability", "Spinner probability", d, "short", `The spinner has ${sectionLabel(red, "red")}, ${sectionLabel(blue, "blue")} and ${sectionLabel(green, "green")}. What is the probability of landing on ${colour[0]}?`, ans, {
           answerType: "fraction",
           diagram: svgSpinner([{label:"R", value:red}, {label:"B", value:blue}, {label:"G", value:green}]),
           hint: "Probability = favourable sections ÷ total sections.",
-          explanation: `There are ${colour[1]} ${colour[0]} sections out of ${total}, so the probability is ${fracText(ans)}.`
+          explanation: `There ${colour[1] === 1 ? "is" : "are"} ${sectionLabel(colour[1], colour[0])} out of ${total}, so the probability is ${fracText(ans)}.`
         });
       });
 
@@ -2202,7 +2290,7 @@
           diagram: svgSpinner([{label:"R", value:red}, {label:"B", value:blue}]),
           choices: ["impossible", "unlikely", "even chance", "likely", "certain"].map(v => ({value:v, label:v})),
           hint: "Count the red sections and compare them with all the sections.",
-          explanation: `There are ${red} red sections out of ${total}, so landing on red is ${ans}.`
+          explanation: `There ${red === 1 ? "is" : "are"} ${sectionLabel(red, "red")} out of ${total}, so landing on red is ${ans}.`
         });
       });
 
@@ -2210,7 +2298,7 @@
         const red = rint(2, 5), blue = rint(2, 5), green = rint(1, 4);
         const total = red + blue + green;
         const ans = simplify(total - green, total);
-        return qBase("probability", "Probability complements", d, "short", `A spinner has ${red} red sections, ${blue} blue sections and ${green} green sections. What is the probability it does not land on green?`, ans, {
+        return qBase("probability", "Probability complements", d, "short", `A spinner has ${sectionLabel(red, "red")}, ${sectionLabel(blue, "blue")} and ${sectionLabel(green, "green")}. What is the probability it does not land on green?`, ans, {
           answerType: "fraction",
           diagram: svgSpinner([{label:"R", value:red}, {label:"B", value:blue}, {label:"G", value:green}]),
           hint: "Not green means red or blue.",
@@ -3797,7 +3885,7 @@
       }, 10);
 
       addFamily("percentRatio", "Exam recipe proportion", (d) => {
-        const people = rint(2,5), factor = rint(2,5+d), newPeople = people * factor, grams = rint(80, 260 + d*35), ans = grams * factor;
+        const people = rint(2,5), factor = rint(2,5+d), newPeople = people * factor, grams = rint(8, 26 + d*3) * 10, ans = grams * factor;
         return qBase("percentRatio", "Exam recipe proportion", d, "short", `A recipe for ${people} people uses ${grams} g of flour. How many grams are needed for ${newPeople} people?`, ans, {
           hint:"Find the scale factor for the number of people.", explanation:`${newPeople} is ${factor} times ${people}; ${grams} × ${factor} = ${ans} g.`
         });
@@ -3966,7 +4054,7 @@
       addFamily("probability", "Exam spinner sections", (d) => {
         const red = rint(1,4), blue = rint(1,4), green = rint(1,4), total = red+blue+green;
         const colour = pick([["red",red],["blue",blue],["green",green]]), ans = simplify(colour[1], total);
-        return qBase("probability", "Exam spinner sections", d, "short", `The spinner has ${red} red sections, ${blue} blue sections and ${green} green sections. What is the probability of landing on ${colour[0]}?`, ans, {answerType:"fraction", diagram:svgSpinner([{label:"R",value:red},{label:"B",value:blue},{label:"G",value:green}]), hint:"Probability is favourable sections over total sections.", explanation:`The probability is ${fracText(ans)}.`});
+        return qBase("probability", "Exam spinner sections", d, "short", `The spinner has ${sectionLabel(red, "red")}, ${sectionLabel(blue, "blue")} and ${sectionLabel(green, "green")}. What is the probability of landing on ${colour[0]}?`, ans, {answerType:"fraction", diagram:svgSpinner([{label:"R",value:red},{label:"B",value:blue},{label:"G",value:green}]), hint:"Probability is favourable sections over total sections.", explanation:`The probability is ${fracText(ans)}.`});
       }, 10);
 
       addFamily("probability", "Exam probability scale sections", (d) => {
@@ -4161,7 +4249,7 @@
         String(q && q.diagram || "").includes("Line graph") ? "|line" :
         String(q && q.diagram || "").includes("Cube net") ? "|net" :
         String(q && q.diagram || "").includes("Coordinate grid") ? "|grid" : "";
-      return `${q.topic}|${skeleton}${diagramType}`;
+      return `${q.topic}|${String(q.title || "").toLowerCase()}|${skeleton}${diagramType}`;
     }
     function familyKey(entry) {
       return `${entry.topic}|${entry.title}`;
@@ -4191,30 +4279,87 @@
       }
       return selected;
     }
+    function questionExactKey(q) {
+      return String(q && q.prompt || "")
+        .toLowerCase()
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+    function questionFamilyTitleKey(q) {
+      return `${q.topic}|${q.title}`.toLowerCase();
+    }
+    function hasDuplicateQuestion(candidate, selected) {
+      if (!candidate) return true;
+      const exact = questionExactKey(candidate);
+      const skeleton = questionPromptKey(candidate);
+      const family = questionFamilyTitleKey(candidate);
+      return selected.some(q => questionExactKey(q) === exact || questionPromptKey(q) === skeleton || questionFamilyTitleKey(q) === family);
+    }
     function createExamQuestions(count) {
       const usedEntries = new Set();
       const usedFamilies = new Set();
       const usedPrompts = new Set();
+      const usedExact = new Set();
       let questions = [];
       const multiplier = count / EXAM_QUESTION_COUNT;
       ACTIVE_TOPICS.forEach(topic => {
         const quota = Math.max(1, Math.round((EXAM_TOPIC_QUOTAS[topic] || 5) * multiplier));
-        questions = questions.concat(selectByTopic(topic, quota, usedEntries, usedFamilies, usedPrompts, questions.length));
+        const selected = [];
+        const targetDiffs = [1,1,2,2,3,3,3,4,4,5,5];
+        let attempts = 0;
+        while (selected.length < quota && attempts < quota * 160) {
+          attempts += 1;
+          const target = targetDiffs[Math.min(targetDiffs.length - 1, Math.floor(selected.length / Math.max(1, quota) * targetDiffs.length))];
+          const pool = BANK.filter(e => e.topic === topic && !usedEntries.has(e.id) && !usedFamilies.has(familyKey(e)));
+          if (!pool.length) break;
+          pool.sort((a,b) => Math.abs((a.difficulty||3)-target) - Math.abs((b.difficulty||3)-target) || Math.random() - .5);
+          const entry = pool[0];
+          usedEntries.add(entry.id);
+          let q = null;
+          for (let tries = 0; tries < 20 && !q; tries++) {
+            const candidate = generateFromEntry(entry, questions.length + selected.length + 1);
+            if (!candidate) continue;
+            const pKey = questionPromptKey(candidate), eKey = questionExactKey(candidate), fKey = familyKey(entry);
+            if (!usedPrompts.has(pKey) && !usedExact.has(eKey) && !usedFamilies.has(fKey) && !hasDuplicateQuestion(candidate, questions.concat(selected))) q = candidate;
+          }
+          if (!q) continue;
+          const pKey = questionPromptKey(q), eKey = questionExactKey(q), fKey = familyKey(entry);
+          usedFamilies.add(fKey); usedPrompts.add(pKey); usedExact.add(eKey);
+          selected.push(q);
+        }
+        questions = questions.concat(selected);
       });
       let guard = 0;
-      while (questions.length < count && guard < BANK.length * 2) {
+      while (questions.length < count && guard < BANK.length * 6) {
         guard += 1;
         const pool = BANK.filter(e => !usedEntries.has(e.id) && !usedFamilies.has(familyKey(e)));
-        const entry = pool.length ? pick(pool) : pick(BANK.filter(e => !usedEntries.has(e.id)));
-        if (!entry) break;
+        if (!pool.length) break;
+        const entry = pick(pool);
+        usedEntries.add(entry.id);
+        let q = null;
+        for (let tries = 0; tries < 20 && !q; tries++) {
+          const candidate = generateFromEntry(entry, questions.length + 1);
+          if (!candidate) continue;
+          const pKey = questionPromptKey(candidate), eKey = questionExactKey(candidate), fKey = familyKey(entry);
+          if (!usedPrompts.has(pKey) && !usedExact.has(eKey) && !usedFamilies.has(fKey) && !hasDuplicateQuestion(candidate, questions)) q = candidate;
+        }
+        if (!q) continue;
+        usedFamilies.add(familyKey(entry)); usedPrompts.add(questionPromptKey(q)); usedExact.add(questionExactKey(q));
+        questions.push(q);
+      }
+      guard = 0;
+      while (questions.length < count && guard < BANK.length * 6) {
+        guard += 1;
+        const fallbackPool = BANK.filter(e => !usedEntries.has(e.id) && !usedFamilies.has(familyKey(e)));
+        if (!fallbackPool.length) break;
+        const entry = pick(fallbackPool);
         usedEntries.add(entry.id);
         const q = generateFromEntry(entry, questions.length + 1);
         if (!q) continue;
-        const pKey = questionPromptKey(q);
-        const fKey = familyKey(entry);
-        if (usedPrompts.has(pKey) || usedFamilies.has(fKey)) continue;
-        usedFamilies.add(fKey);
-        usedPrompts.add(pKey);
+        const exact = questionExactKey(q), skeleton = questionPromptKey(q);
+        if (usedExact.has(exact) || usedPrompts.has(skeleton) || questions.some(existing => questionExactKey(existing) === exact || questionPromptKey(existing) === skeleton)) continue;
+        usedExact.add(exact); usedPrompts.add(skeleton); usedFamilies.add(familyKey(entry));
         questions.push(q);
       }
       questions = shuffle(questions).sort((a,b) => (a.difficulty + Math.random()*.6) - (b.difficulty + Math.random()*.6));
@@ -4372,7 +4517,7 @@
         const s = stats[t], label = s.rag === "green" ? "Green: secure" : s.rag === "amber" ? "Amber: developing" : "Red: priority";
         return `<div class="heat-tile ${s.rag}"><div class="heat-title">${escapeHtml(s.name)}</div><div class="heat-status">${s.correct}/${s.total} correct · ${s.pct}% · ${label}</div><div class="heat-feedback">${escapeHtml(topicAdvice[t])}</div></div>`;
       }).join("");
-      const rows = examState.questions.map((q,i) => `<tr><td>${i+1}</td><td>${escapeHtml(TOPICS[q.topic].name)}</td><td>${responseCorrect(q, examState.responses[i]) ? "✓" : "✗"}</td><td>${mathifyText(userAnswerText(examState.responses[i]))}</td><td>${mathifyText(answerLabel(q))}</td></tr>`).join("");
+      const rows = examState.questions.map((q,i) => `<tr><td>${mathifyText(String(i+1))}</td><td>${escapeHtml(TOPICS[q.topic].name)}</td><td>${responseCorrect(q, examState.responses[i]) ? "✓" : "✗"}</td><td>${mathifyText(userAnswerText(examState.responses[i]))}</td><td>${mathifyText(answerLabel(q))}</td></tr>`).join("");
       examEls.questionReviewList.innerHTML = `<table class="mini-table"><thead><tr><th>#</th><th>Topic</th><th>Mark</th><th>Your answer</th><th>Correct answer</th></tr></thead><tbody>${rows}</tbody></table>`;
     }
     function startReview() {
